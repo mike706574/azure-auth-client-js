@@ -36,14 +36,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mike706574/js-azure-auth-client.git"
+    "url": "https://github.com/mike706574/azure-auth-client-js.git"
   },
   "author": "Michael Easter",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mike706574/js-azure-auth-client/issues"
+    "url": "https://github.com/mike706574/azure-auth-client-js/issues"
   },
-  "homepage": "https://github.com/mike706574/js-azure-auth-client",
+  "homepage": "https://github.com/mike706574/azure-auth-client-js",
   "dependencies": {
     "jwt-decode": "2.2.0"
   }
