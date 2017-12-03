@@ -45,7 +45,6 @@
   },
   "homepage": "https://github.com/mike706574/js-azure-auth-client",
   "dependencies": {
-    "adal-angular": "1.0.15",
     "jwt-decode": "2.2.0"
   }
 }

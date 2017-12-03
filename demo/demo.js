@@ -1521,8 +1521,9 @@ var start = function () {
             response = _context2.sent;
 
 
-            console.log('Response', response);
+            console.log('Identity token response.', response);
             if (response.ok) {
+              console.log("Identity token.", response.token);
               message = 'Logged in as ' + response.name + '.';
 
               document.getElementById("text").innerHTML = message;
@@ -1536,7 +1537,21 @@ var start = function () {
               }
             }
 
-          case 5:
+            _context2.next = 7;
+            return client.getAccessToken("ekawjewoia");
+
+          case 7:
+            response = _context2.sent;
+
+            console.log('Access token response.', response);
+
+            if (response.ok) {
+              console.log("Access token.", response.token);
+            } else {
+              console.log("Failed to get access token.", response);
+            }
+
+          case 10:
           case 'end':
             return _context2.stop();
         }
@@ -1557,12 +1572,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 console.log('Loading demo! URL is ' + window.location.href + '.');
 
-var RESOURCE = '<resource>';
+var RESOURCE = 'f9e527eb-55e3-4f45-b549-f6379f328245';
 
 var config = { azureAuthConfig: { clientType: 'ADAL',
-    tenantName: '<tenantName>',
-    clientId: '<clientId>',
-    domain: '<domain>' } };
+    tenantId: '6eddd185-7ad7-4ee3-9481-04644b9f43a2',
+    clientId: 'ae33c32e-d2f2-4992-a4b2-51d03e7c8677',
+    domain: 'nmcop.com' } };
 
 var client = _azureAuthClient2.default.build(config);
 
@@ -3260,7 +3275,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
     /***/function (module, exports, __webpack_require__) {
 
       var store = __webpack_require__(31)('wks');
-      var uid = __webpack_require__(20);
+      var uid = __webpack_require__(21);
       var _Symbol = __webpack_require__(1).Symbol;
       var USE_SYMBOL = typeof _Symbol == 'function';
 
@@ -3358,7 +3373,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       var anObject = __webpack_require__(4);
       var IE8_DOM_DEFINE = __webpack_require__(40);
-      var toPrimitive = __webpack_require__(25);
+      var toPrimitive = __webpack_require__(26);
       var dP = _defineProperty4.default;
 
       exports.f = __webpack_require__(6) ? _defineProperty4.default : function defineProperty(O, P, Attributes) {
@@ -3532,13 +3547,46 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
       /***/
     },
     /* 18 */
+    /***/function (module, exports, __webpack_require__) {
+
+      "use strict";
+
+      exports.__esModule = true;
+
+      var _iterator = __webpack_require__(68);
+
+      var _iterator2 = _interopRequireDefault(_iterator);
+
+      var _symbol = __webpack_require__(78);
+
+      var _symbol2 = _interopRequireDefault(_symbol);
+
+      var _typeof = typeof _symbol2.default === "function" && (0, _typeof6.default)(_iterator2.default) === "symbol" ? function (obj) {
+        return typeof obj === 'undefined' ? 'undefined' : (0, _typeof6.default)(obj);
+      } : function (obj) {
+        return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj === 'undefined' ? 'undefined' : (0, _typeof6.default)(obj);
+      };
+
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : { default: obj };
+      }
+
+      exports.default = typeof _symbol2.default === "function" && _typeof(_iterator2.default) === "symbol" ? function (obj) {
+        return typeof obj === "undefined" ? "undefined" : _typeof(obj);
+      } : function (obj) {
+        return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
+      };
+
+      /***/
+    },
+    /* 19 */
     /***/function (module, exports) {
 
       module.exports = true;
 
       /***/
     },
-    /* 19 */
+    /* 20 */
     /***/function (module, exports, __webpack_require__) {
 
       // 19.1.2.14 / 15.2.3.14 Object.keys(O)
@@ -3551,7 +3599,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       /***/
     },
-    /* 20 */
+    /* 21 */
     /***/function (module, exports) {
 
       var id = 0;
@@ -3562,7 +3610,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       /***/
     },
-    /* 21 */
+    /* 22 */
     /***/function (module, exports, __webpack_require__) {
 
       var def = __webpack_require__(5).f;
@@ -3575,14 +3623,14 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       /***/
     },
-    /* 22 */
+    /* 23 */
     /***/function (module, exports) {
 
       exports.f = {}.propertyIsEnumerable;
 
       /***/
     },
-    /* 23 */
+    /* 24 */
     /***/function (module, exports, __webpack_require__) {
 
       "use strict";
@@ -3617,7 +3665,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       /***/
     },
-    /* 24 */
+    /* 25 */
     /***/function (module, exports, __webpack_require__) {
 
       var isObject = __webpack_require__(8);
@@ -3630,7 +3678,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       /***/
     },
-    /* 25 */
+    /* 26 */
     /***/function (module, exports, __webpack_require__) {
 
       // 7.1.1 ToPrimitive(input [, PreferredType])
@@ -3644,39 +3692,6 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
         if (typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it))) return val;
         if (!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
         throw TypeError("Can't convert object to primitive value");
-      };
-
-      /***/
-    },
-    /* 26 */
-    /***/function (module, exports, __webpack_require__) {
-
-      "use strict";
-
-      exports.__esModule = true;
-
-      var _iterator = __webpack_require__(68);
-
-      var _iterator2 = _interopRequireDefault(_iterator);
-
-      var _symbol = __webpack_require__(78);
-
-      var _symbol2 = _interopRequireDefault(_symbol);
-
-      var _typeof = typeof _symbol2.default === "function" && (0, _typeof6.default)(_iterator2.default) === "symbol" ? function (obj) {
-        return typeof obj === 'undefined' ? 'undefined' : (0, _typeof6.default)(obj);
-      } : function (obj) {
-        return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj === 'undefined' ? 'undefined' : (0, _typeof6.default)(obj);
-      };
-
-      function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : { default: obj };
-      }
-
-      exports.default = typeof _symbol2.default === "function" && _typeof(_iterator2.default) === "symbol" ? function (obj) {
-        return typeof obj === "undefined" ? "undefined" : _typeof(obj);
-      } : function (obj) {
-        return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
       };
 
       /***/
@@ -3718,7 +3733,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
       // Create object with fake `null` prototype: use iframe Object with cleared prototype
       var _createDict = function createDict() {
         // Thrash, waste and sodomy: IE GC bug
-        var iframe = __webpack_require__(24)('iframe');
+        var iframe = __webpack_require__(25)('iframe');
         var i = enumBugKeys.length;
         var lt = '<';
         var gt = '>';
@@ -3756,7 +3771,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
     /***/function (module, exports, __webpack_require__) {
 
       var shared = __webpack_require__(31)('keys');
-      var uid = __webpack_require__(20);
+      var uid = __webpack_require__(21);
       module.exports = function (key) {
         return shared[key] || (shared[key] = uid(key));
       };
@@ -3806,7 +3821,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       var global = __webpack_require__(1);
       var core = __webpack_require__(0);
-      var LIBRARY = __webpack_require__(18);
+      var LIBRARY = __webpack_require__(19);
       var wksExt = __webpack_require__(34);
       var defineProperty = __webpack_require__(5).f;
       module.exports = function (name) {
@@ -3912,7 +3927,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
     /***/function (module, exports, __webpack_require__) {
 
       module.exports = !__webpack_require__(6) && !__webpack_require__(10)(function () {
-        return Object.defineProperty(__webpack_require__(24)('div'), 'a', { get: function get() {
+        return Object.defineProperty(__webpack_require__(25)('div'), 'a', { get: function get() {
             return 7;
           } }).a != 7;
       });
@@ -3928,7 +3943,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
         value: true
       });
 
-      var _typeof2 = __webpack_require__(26);
+      var _typeof2 = __webpack_require__(18);
 
       var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -4063,14 +4078,14 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       "use strict";
 
-      var LIBRARY = __webpack_require__(18);
+      var LIBRARY = __webpack_require__(19);
       var $export = __webpack_require__(3);
       var redefine = __webpack_require__(44);
       var hide = __webpack_require__(7);
       var has = __webpack_require__(9);
       var Iterators = __webpack_require__(13);
       var $iterCreate = __webpack_require__(71);
-      var setToStringTag = __webpack_require__(21);
+      var setToStringTag = __webpack_require__(22);
       var getPrototypeOf = __webpack_require__(49);
       var ITERATOR = __webpack_require__(2)('iterator');
       var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
@@ -4267,10 +4282,10 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
     /* 52 */
     /***/function (module, exports, __webpack_require__) {
 
-      var pIE = __webpack_require__(22);
+      var pIE = __webpack_require__(23);
       var createDesc = __webpack_require__(17);
       var toIObject = __webpack_require__(11);
-      var toPrimitive = __webpack_require__(25);
+      var toPrimitive = __webpack_require__(26);
       var has = __webpack_require__(9);
       var IE8_DOM_DEFINE = __webpack_require__(40);
       var gOPD = _getOwnPropertyDescriptor2.default;
@@ -4421,7 +4436,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
       var ctx = __webpack_require__(12);
       var invoke = __webpack_require__(97);
       var html = __webpack_require__(48);
-      var cel = __webpack_require__(24);
+      var cel = __webpack_require__(25);
       var global = __webpack_require__(1);
       var process = global.process;
       var setTask = global.setImmediate;
@@ -4659,7 +4674,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-      var _createClass2 = __webpack_require__(23);
+      var _createClass2 = __webpack_require__(24);
 
       var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4813,7 +4828,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       var create = __webpack_require__(29);
       var descriptor = __webpack_require__(17);
-      var setToStringTag = __webpack_require__(21);
+      var setToStringTag = __webpack_require__(22);
       var IteratorPrototype = {};
 
       // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
@@ -4833,7 +4848,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       var dP = __webpack_require__(5);
       var anObject = __webpack_require__(4);
-      var getKeys = __webpack_require__(19);
+      var getKeys = __webpack_require__(20);
 
       module.exports = __webpack_require__(6) ? _defineProperties2.default : function defineProperties(O, Properties) {
         anObject(O);
@@ -4982,8 +4997,8 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
       var META = __webpack_require__(81).KEY;
       var $fails = __webpack_require__(10);
       var shared = __webpack_require__(31);
-      var setToStringTag = __webpack_require__(21);
-      var uid = __webpack_require__(20);
+      var setToStringTag = __webpack_require__(22);
+      var uid = __webpack_require__(21);
       var wks = __webpack_require__(2);
       var wksExt = __webpack_require__(34);
       var wksDefine = __webpack_require__(35);
@@ -4991,13 +5006,13 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
       var isArray = __webpack_require__(83);
       var anObject = __webpack_require__(4);
       var toIObject = __webpack_require__(11);
-      var toPrimitive = __webpack_require__(25);
+      var toPrimitive = __webpack_require__(26);
       var createDesc = __webpack_require__(17);
       var _create = __webpack_require__(29);
       var gOPNExt = __webpack_require__(84);
       var $GOPD = __webpack_require__(52);
       var $DP = __webpack_require__(5);
-      var $keys = __webpack_require__(19);
+      var $keys = __webpack_require__(20);
       var gOPD = $GOPD.f;
       var dP = $DP.f;
       var gOPN = gOPNExt.f;
@@ -5124,10 +5139,10 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
         $GOPD.f = $getOwnPropertyDescriptor;
         $DP.f = $defineProperty;
         __webpack_require__(51).f = gOPNExt.f = $getOwnPropertyNames;
-        __webpack_require__(22).f = $propertyIsEnumerable;
+        __webpack_require__(23).f = $propertyIsEnumerable;
         __webpack_require__(36).f = $getOwnPropertySymbols;
 
-        if (DESCRIPTORS && !__webpack_require__(18)) {
+        if (DESCRIPTORS && !__webpack_require__(19)) {
           redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
         }
 
@@ -5219,7 +5234,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
     /* 81 */
     /***/function (module, exports, __webpack_require__) {
 
-      var META = __webpack_require__(20)('meta');
+      var META = __webpack_require__(21)('meta');
       var isObject = __webpack_require__(8);
       var has = __webpack_require__(9);
       var setDesc = __webpack_require__(5).f;
@@ -5279,9 +5294,9 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
     /***/function (module, exports, __webpack_require__) {
 
       // all enumerable object keys, includes symbols
-      var getKeys = __webpack_require__(19);
+      var getKeys = __webpack_require__(20);
       var gOPS = __webpack_require__(36);
-      var pIE = __webpack_require__(22);
+      var pIE = __webpack_require__(23);
       module.exports = function (it) {
         var result = getKeys(it);
         var getSymbols = gOPS.f;
@@ -5360,7 +5375,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-      var _createClass2 = __webpack_require__(23);
+      var _createClass2 = __webpack_require__(24);
 
       var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -5403,9 +5418,9 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
         };
       }();
 
-      var _adalAngular = __webpack_require__(104);
+      var _adal = __webpack_require__(104);
 
-      var AuthenticationContext = _interopRequireWildcard(_adalAngular);
+      var AuthenticationContext = _interopRequireWildcard(_adal);
 
       var _struct = __webpack_require__(41);
 
@@ -5463,8 +5478,12 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           } else {
             authContext.acquireToken(resource, function (_, token, error) {
               if (error) {
-                authContext.login();
-                resolve({ ok: false, reason: error });
+                if (error === 'invalid_resource') {
+                  resolve({ ok: false, reason: 'invalid-resource', resource: resource });
+                } else {
+                  authContext.login();
+                  resolve({ ok: false, reason: error });
+                }
               } else {
                 resolve((0, _common.decode)(token));
               }
@@ -5665,9 +5684,15 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
                 config.extraQueryParameter = 'nux=1&domain_hint=' + config.domain;
               }
 
-              if (!config.tenant) {
+              if (config.tenantId) {
+                struct.requiredString(config, 'auth config', 'tenantId');
+                config.tenant = config.tenantId;
+              } else if (config.tenantName) {
                 struct.requiredString(config, 'auth config', 'tenantName');
                 config.tenant = config.tenantName + '.onmicrosoft.com';
+              } else if (config.tenant) {
+                struct.requiredString(config, 'auth config', 'tenant');
+                config.tenant = config.tenant;
               }
 
               struct.requiredStrings(config, 'auth config', ['tenant', 'extraQueryParameter', 'redirectUri', 'cacheLocation']);
@@ -6452,7 +6477,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       "use strict";
 
-      var LIBRARY = __webpack_require__(18);
+      var LIBRARY = __webpack_require__(19);
       var global = __webpack_require__(1);
       var ctx = __webpack_require__(12);
       var classof = __webpack_require__(57);
@@ -6666,7 +6691,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
       }
 
       $export($export.G + $export.W + $export.F * !USE_NATIVE, { Promise: $Promise });
-      __webpack_require__(21)($Promise, PROMISE);
+      __webpack_require__(22)($Promise, PROMISE);
       __webpack_require__(100)(PROMISE);
       Wrapper = __webpack_require__(0)[PROMISE];
 
@@ -7036,7 +7061,17 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
       /***/
     },
     /* 104 */
-    /***/function (module, exports) {
+    /***/function (module, exports, __webpack_require__) {
+
+      "use strict";
+
+      var _typeof2 = __webpack_require__(18);
+
+      var _typeof3 = _interopRequireDefault(_typeof2);
+
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : { default: obj };
+      }
 
       //----------------------------------------------------------------------
       // AdalJS v1.0.15
@@ -7065,7 +7100,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
          * Configuration options for Authentication Context.
          * @class config
          *  @property {string} tenant - Your target tenant.
-         *  @property {string} clientID - Client ID assigned to your app by Azure Active Directory.
+         *  @property {string} clientId - Client ID assigned to your app by Azure Active Directory.
          *  @property {string} redirectUri - Endpoint at which you expect to receive tokens.Defaults to `window.location.href`.
          *  @property {string} instance - Azure Active Directory Instance.Defaults to `https://login.microsoftonline.com/`.
          *  @property {Array} endpoints - Collection of {Endpoint-ResourceId} used for automatically attaching tokens in webApi calls.
@@ -7075,8 +7110,9 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
          *  @property {string} postLogoutRedirectUri - Redirects the user to postLogoutRedirectUri after logout. Defaults is 'redirectUri'.
          *  @property {string} cacheLocation - Sets browser storage to either 'localStorage' or sessionStorage'. Defaults to 'sessionStorage'.
          *  @property {Array.<string>} anonymousEndpoints Array of keywords or URI's. Adal will not attach a token to outgoing requests that have these keywords or uri. Defaults to 'null'.
-         *  @property {number} expireOffsetSeconds If the cached token is about to be expired in the expireOffsetSeconds (in seconds), Adal will renew the token instead of using the cached token. Defaults to 120 seconds.
+         *  @property {number} expireOffsetSeconds If the cached token is about to be expired in the expireOffsetSeconds (in seconds), Adal will renew the token instead of using the cached token. Defaults to 300 seconds.
          *  @property {string} correlationId Unique identifier used to map the request with the response. Defaults to RFC4122 version 4 guid (128 bits).
+         *  @property {number} loadFrameTimeout The number of milliseconds of inactivity before a token renewal response from AAD should be considered timed out.
          */
 
         /**
@@ -7096,6 +7132,11 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
             UNKNOWN: 'UNKNOWN'
           };
 
+          this.RESPONSE_TYPE = {
+            ID_TOKEN_TOKEN: 'id_token token',
+            TOKEN: 'token'
+          };
+
           /**
            * Enum for storage constants
            * @enum {string}
@@ -7106,6 +7147,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
             ID_TOKEN: 'id_token',
             ERROR_DESCRIPTION: 'error_description',
             SESSION_STATE: 'session_state',
+            ERROR: 'error',
             STORAGE: {
               TOKEN_KEYS: 'adal.token.keys',
               ACCESS_TOKEN_KEY: 'adal.access.token.key',
@@ -7120,10 +7162,12 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
               ERROR_DESCRIPTION: 'adal.error.description',
               LOGIN_REQUEST: 'adal.login.request',
               LOGIN_ERROR: 'adal.login.error',
-              RENEW_STATUS: 'adal.token.renew.status'
+              RENEW_STATUS: 'adal.token.renew.status',
+              ANGULAR_LOGIN_REQUEST: 'adal.angular.login.request'
             },
             RESOURCE_DELIMETER: '|',
-            LOADFRAME_TIMEOUT: '6000',
+            CACHE_DELIMETER: '||',
+            LOADFRAME_TIMEOUT: 6000,
             TOKEN_RENEW_STATUS_CANCELED: 'Canceled',
             TOKEN_RENEW_STATUS_COMPLETED: 'Completed',
             TOKEN_RENEW_STATUS_IN_PROGRESS: 'In Progress',
@@ -7160,10 +7204,12 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           this._activeRenewals = {};
           this._loginInProgress = false;
           this._acquireTokenInProgress = false;
-
-          window.renewStates = [];
-          window.callBackMappedToRenewStates = {};
-          window.callBacksMappedToRenewStates = {};
+          this._renewStates = [];
+          this._callBackMappedToRenewStates = {};
+          this._callBacksMappedToRenewStates = {};
+          this._openedWindows = [];
+          this._requestType = this.REQUEST_TYPE.LOGIN;
+          window._adalInstance = this;
 
           // validate before constructor assignments
           if (config.displayCall && typeof config.displayCall !== 'function') {
@@ -7209,38 +7255,58 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           if (this.config.isAngular) {
             this.isAngular = this.config.isAngular;
           }
+
+          if (this.config.loadFrameTimeout) {
+            this.CONSTANTS.LOADFRAME_TIMEOUT = this.config.loadFrameTimeout;
+          }
         };
 
-        window.Logging = {
-          level: 0,
-          log: function log(message) {}
-        };
+        if (typeof window !== 'undefined') {
+          window.Logging = {
+            level: 0,
+            log: function log(message) {}
+          };
+        }
 
         /**
          * Initiates the login process by redirecting the user to Azure AD authorization endpoint.
          */
-        _AuthenticationContext.prototype.login = function (loginStartPage) {
-          // Token is not present and user needs to login
+        _AuthenticationContext.prototype.login = function () {
           if (this._loginInProgress) {
             this.info("Login in progress");
             return;
           }
+
+          this._loginInProgress = true;
+
+          // Token is not present and user needs to login
           var expectedState = this._guid();
           this.config.state = expectedState;
           this._idTokenNonce = this._guid();
-          this.verbose('Expected state: ' + expectedState + ' startPage:' + window.location.href);
-          this._saveItem(this.CONSTANTS.STORAGE.LOGIN_REQUEST, loginStartPage || window.location.href);
+          var loginStartPage = this._getItem(this.CONSTANTS.STORAGE.ANGULAR_LOGIN_REQUEST);
+
+          if (!loginStartPage || loginStartPage === "") {
+            loginStartPage = window.location.href;
+          } else {
+            this._saveItem(this.CONSTANTS.STORAGE.ANGULAR_LOGIN_REQUEST, "");
+          }
+
+          this.verbose('Expected state: ' + expectedState + ' startPage:' + loginStartPage);
+          this._saveItem(this.CONSTANTS.STORAGE.LOGIN_REQUEST, loginStartPage);
           this._saveItem(this.CONSTANTS.STORAGE.LOGIN_ERROR, '');
-          this._saveItem(this.CONSTANTS.STORAGE.STATE_LOGIN, expectedState);
-          this._saveItem(this.CONSTANTS.STORAGE.NONCE_IDTOKEN, this._idTokenNonce);
+          this._saveItem(this.CONSTANTS.STORAGE.STATE_LOGIN, expectedState, true);
+          this._saveItem(this.CONSTANTS.STORAGE.NONCE_IDTOKEN, this._idTokenNonce, true);
           this._saveItem(this.CONSTANTS.STORAGE.ERROR, '');
           this._saveItem(this.CONSTANTS.STORAGE.ERROR_DESCRIPTION, '');
           var urlNavigate = this._getNavigateUrl('id_token', null) + '&nonce=' + encodeURIComponent(this._idTokenNonce);
-          this._loginInProgress = true;
+
           if (this.config.displayCall) {
             // User defined way of handling the navigation
             this.config.displayCall(urlNavigate);
           } else if (this.popUp) {
+            this._saveItem(this.CONSTANTS.STORAGE.STATE_LOGIN, ''); // so requestInfo does not match redirect case
+            this._renewStates.push(expectedState);
+            this.registerCallback(expectedState, this.config.clientId, this.callback);
             this._loginPopup(urlNavigate);
           } else {
             this.promptUser(urlNavigate);
@@ -7269,14 +7335,35 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
             var top = height / 2 - popUpHeight / 2 + winTop;
 
             var popupWindow = window.open(urlNavigate, title, 'width=' + popUpWidth + ', height=' + popUpHeight + ', top=' + top + ', left=' + left);
+
             if (popupWindow.focus) {
               popupWindow.focus();
             }
+
             return popupWindow;
           } catch (e) {
             this.warn('Error opening popup, ' + e.message);
             this._loginInProgress = false;
+            this._acquireTokenInProgress = false;
             return null;
+          }
+        };
+
+        _AuthenticationContext.prototype._handlePopupError = function (loginCallback, resource, error, errorDesc, loginError) {
+          this.warn(errorDesc);
+          this._saveItem(this.CONSTANTS.STORAGE.ERROR, error);
+          this._saveItem(this.CONSTANTS.STORAGE.ERROR_DESCRIPTION, errorDesc);
+          this._saveItem(this.CONSTANTS.STORAGE.LOGIN_ERROR, loginError);
+
+          if (resource && this._activeRenewals[resource]) {
+            this._activeRenewals[resource] = null;
+          }
+
+          this._loginInProgress = false;
+          this._acquireTokenInProgress = false;
+
+          if (loginCallback) {
+            loginCallback(errorDesc, null, error);
           }
         };
 
@@ -7288,48 +7375,59 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
         _AuthenticationContext.prototype._loginPopup = function (urlNavigate, resource, callback) {
           var popupWindow = this._openPopup(urlNavigate, "login", this.CONSTANTS.POPUP_WIDTH, this.CONSTANTS.POPUP_HEIGHT);
           var loginCallback = callback || this.callback;
+
           if (popupWindow == null) {
-            this.warn('Popup Window is null. This can happen if you are using IE');
-            this._saveItem(this.CONSTANTS.STORAGE.ERROR, 'Error opening popup');
-            this._saveItem(this.CONSTANTS.STORAGE.ERROR_DESCRIPTION, 'Popup Window is null. This can happen if you are using IE');
-            this._saveItem(this.CONSTANTS.STORAGE.LOGIN_ERROR, 'Popup Window is null. This can happen if you are using IE');
-            if (resource && this._activeRenewals[resource]) {
-              this._activeRenewals[resource] = null;
-            }
-            this._loginInProgress = false;
-            this._acquireTokenInProgress = false;
-            if (loginCallback) loginCallback(this._getItem(this.CONSTANTS.STORAGE.ERROR_DESCRIPTION), null, this._getItem(this.CONSTANTS.STORAGE.ERROR));
+            var error = 'Error opening popup';
+            var errorDesc = 'Popup Window is null. This can happen if you are using IE';
+            this._handlePopupError(loginCallback, resource, error, errorDesc, errorDesc);
             return;
           }
-          if (this.config.redirectUri.indexOf('#') != -1) var registeredRedirectUri = this.config.redirectUri.split("#")[0];else var registeredRedirectUri = this.config.redirectUri;
+
+          this._openedWindows.push(popupWindow);
+
+          if (this.config.redirectUri.indexOf('#') != -1) {
+            var registeredRedirectUri = this.config.redirectUri.split("#")[0];
+          } else {
+            var registeredRedirectUri = this.config.redirectUri;
+          }
+
           var that = this;
+
           var pollTimer = window.setInterval(function () {
             if (!popupWindow || popupWindow.closed || popupWindow.closed === undefined) {
-              that._loginInProgress = false;
-              that._acquireTokenInProgress = false;
-              if (resource && that._activeRenewals[resource]) {
-                that._activeRenewals[resource] = null;
+              var error = 'Popup Window closed';
+              var errorDesc = 'Popup Window closed by UI action/ Popup Window handle destroyed due to cross zone navigation in IE/Edge';
+
+              if (that.isAngular) {
+                that._broadcast('adal:popUpClosed', errorDesc + that.CONSTANTS.RESOURCE_DELIMETER + error);
               }
+
+              that._handlePopupError(loginCallback, resource, error, errorDesc, errorDesc);
               window.clearInterval(pollTimer);
+              return;
             }
             try {
-              if (popupWindow.location.href.indexOf(registeredRedirectUri) != -1) {
+              var popUpWindowLocation = popupWindow.location;
+              if (encodeURI(popUpWindowLocation.href).indexOf(encodeURI(registeredRedirectUri)) != -1) {
                 if (that.isAngular) {
-                  that._onPopUpHashChanged(popupWindow.location.hash);
+                  that._broadcast('adal:popUpHashChanged', popUpWindowLocation.hash);
                 } else {
-                  that.handleWindowCallback(popupWindow.location.hash);
+                  that.handleWindowCallback(popUpWindowLocation.hash);
                 }
+
                 window.clearInterval(pollTimer);
                 that._loginInProgress = false;
                 that._acquireTokenInProgress = false;
                 that.info("Closing popup window");
+                that._openedWindows = [];
                 popupWindow.close();
+                return;
               }
             } catch (e) {}
           }, 1);
         };
 
-        _AuthenticationContext.prototype._onPopUpHashChanged = function (hash) {
+        _AuthenticationContext.prototype._broadcast = function (eventName, data) {
           // Custom Event is not supported in IE, below IIFE will polyfill the CustomEvent() constructor functionality in Internet Explorer 9 and higher
           (function () {
 
@@ -7348,7 +7446,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
             window.CustomEvent = CustomEvent;
           })();
 
-          var evt = new CustomEvent('adal:popUpHashChanged', { detail: hash });
+          var evt = new CustomEvent(eventName, { detail: data });
           window.dispatchEvent(evt);
         };
 
@@ -7420,24 +7518,28 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
          */
         _AuthenticationContext.prototype.registerCallback = function (expectedState, resource, callback) {
           this._activeRenewals[resource] = expectedState;
-          if (!window.callBacksMappedToRenewStates[expectedState]) {
-            window.callBacksMappedToRenewStates[expectedState] = [];
+
+          if (!this._callBacksMappedToRenewStates[expectedState]) {
+            this._callBacksMappedToRenewStates[expectedState] = [];
           }
+
           var self = this;
-          window.callBacksMappedToRenewStates[expectedState].push(callback);
-          if (!window.callBackMappedToRenewStates[expectedState]) {
-            window.callBackMappedToRenewStates[expectedState] = function (errorDesc, token, error) {
+          this._callBacksMappedToRenewStates[expectedState].push(callback);
+
+          if (!this._callBackMappedToRenewStates[expectedState]) {
+            this._callBackMappedToRenewStates[expectedState] = function (errorDesc, token, error, tokenType) {
               self._activeRenewals[resource] = null;
 
-              for (var i = 0; i < window.callBacksMappedToRenewStates[expectedState].length; ++i) {
+              for (var i = 0; i < self._callBacksMappedToRenewStates[expectedState].length; ++i) {
                 try {
-                  window.callBacksMappedToRenewStates[expectedState][i](errorDesc, token, error);
+                  self._callBacksMappedToRenewStates[expectedState][i](errorDesc, token, error, tokenType);
                 } catch (error) {
                   self.warn(error);
                 }
               }
-              window.callBacksMappedToRenewStates[expectedState] = null;
-              window.callBackMappedToRenewStates[expectedState] = null;
+
+              self._callBacksMappedToRenewStates[expectedState] = null;
+              self._callBackMappedToRenewStates[expectedState] = null;
             };
           }
         };
@@ -7450,7 +7552,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
          * Acquires access token with hidden iframe
          * @ignore
          */
-        _AuthenticationContext.prototype._renewToken = function (resource, callback) {
+        _AuthenticationContext.prototype._renewToken = function (resource, callback, responseType) {
           // use iframe to try refresh token
           // use given resource to create new authz url
           this.info('renewToken is called for resource:' + resource);
@@ -7458,12 +7560,20 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           var expectedState = this._guid() + '|' + resource;
           this.config.state = expectedState;
           // renew happens in iframe, so it keeps javascript context
-          window.renewStates.push(expectedState);
-
+          this._renewStates.push(expectedState);
           this.verbose('Renew token Expected state: ' + expectedState);
-          var urlNavigate = this._getNavigateUrl('token', resource) + '&prompt=none';
-          urlNavigate = this._addHintParameters(urlNavigate);
+          // remove the existing prompt=... query parameter and add prompt=none
+          responseType = responseType || 'token';
+          var urlNavigate = this._urlRemoveQueryStringParameter(this._getNavigateUrl(responseType, resource), 'prompt');
 
+          if (responseType === this.RESPONSE_TYPE.ID_TOKEN_TOKEN) {
+            this._idTokenNonce = this._guid();
+            this._saveItem(this.CONSTANTS.STORAGE.NONCE_IDTOKEN, this._idTokenNonce, true);
+            urlNavigate += '&nonce=' + encodeURIComponent(this._idTokenNonce);
+          }
+
+          urlNavigate = urlNavigate + '&prompt=none';
+          urlNavigate = this._addHintParameters(urlNavigate);
           this.registerCallback(expectedState, resource, callback);
           this.verbose('Navigate to:' + urlNavigate);
           frameHandle.src = 'about:blank';
@@ -7474,24 +7584,25 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
          * Renews idtoken for app's own backend when resource is clientId and calls the callback with token/error
          * @ignore
          */
-        _AuthenticationContext.prototype._renewIdToken = function (callback) {
+        _AuthenticationContext.prototype._renewIdToken = function (callback, responseType) {
           // use iframe to try refresh token
           this.info('renewIdToken is called');
           var frameHandle = this._addAdalFrame('adalIdTokenFrame');
           var expectedState = this._guid() + '|' + this.config.clientId;
           this._idTokenNonce = this._guid();
-          this._saveItem(this.CONSTANTS.STORAGE.NONCE_IDTOKEN, this._idTokenNonce);
+          this._saveItem(this.CONSTANTS.STORAGE.NONCE_IDTOKEN, this._idTokenNonce, true);
           this.config.state = expectedState;
           // renew happens in iframe, so it keeps javascript context
-          window.renewStates.push(expectedState);
-
+          this._renewStates.push(expectedState);
           this.verbose('Renew Idtoken Expected state: ' + expectedState);
-          var urlNavigate = this._getNavigateUrl('id_token', null) + '&prompt=none';
+          // remove the existing prompt=... query parameter and add prompt=none
+          var resource = responseType === null || typeof responseType === "undefined" ? null : this.config.clientId;
+          var responseType = responseType || 'id_token';
+          var urlNavigate = this._urlRemoveQueryStringParameter(this._getNavigateUrl(responseType, resource), 'prompt');
+          urlNavigate = urlNavigate + '&prompt=none';
           urlNavigate = this._addHintParameters(urlNavigate);
-
           urlNavigate += '&nonce=' + encodeURIComponent(this._idTokenNonce);
           this.registerCallback(expectedState, this.config.clientId, callback);
-          this.idTokenNonce = null;
           this.verbose('Navigate to:' + urlNavigate);
           frameHandle.src = 'about:blank';
           this._loadFrameTimeout(urlNavigate, 'adalIdTokenFrame', this.config.clientId);
@@ -7507,6 +7618,24 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           return regex.test(url);
         };
 
+        /**
+         * Removes the query string parameter from the authorization endpoint URL if it exists
+         * @ignore
+         */
+        _AuthenticationContext.prototype._urlRemoveQueryStringParameter = function (url, name) {
+          // we remove &name=value, name=value& and name=value
+          // &name=value
+          var regex = new RegExp('(\\&' + name + '=)[^\&]+');
+          url = url.replace(regex, '');
+          // name=value&
+          regex = new RegExp('(' + name + '=)[^\&]+&');
+          url = url.replace(regex, '');
+          // name=value
+          regex = new RegExp('(' + name + '=)[^\&]+');
+          url = url.replace(regex, '');
+          return url;
+        };
+
         // Calling _loadFrame but with a timeout to signal failure in loadframeStatus. Callbacks are left
         // registered when network errors occur and subsequent token requests for same resource are registered to the pending request
         /**
@@ -7518,13 +7647,15 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           this._saveItem(this.CONSTANTS.STORAGE.RENEW_STATUS + resource, this.CONSTANTS.TOKEN_RENEW_STATUS_IN_PROGRESS);
           this._loadFrame(urlNavigation, frameName);
           var self = this;
+
           setTimeout(function () {
             if (self._getItem(self.CONSTANTS.STORAGE.RENEW_STATUS + resource) === self.CONSTANTS.TOKEN_RENEW_STATUS_IN_PROGRESS) {
               // fail the iframe session if it's in pending state
               self.verbose('Loading frame has timed out after: ' + self.CONSTANTS.LOADFRAME_TIMEOUT / 1000 + ' seconds for resource ' + resource);
               var expectedState = self._activeRenewals[resource];
-              if (expectedState && window.callBackMappedToRenewStates[expectedState]) {
-                window.callBackMappedToRenewStates[expectedState]('Token renewal operation failed due to timeout', null, 'Token Renewal Failed');
+
+              if (expectedState && self._callBackMappedToRenewStates[expectedState]) {
+                self._callBackMappedToRenewStates[expectedState]('Token renewal operation failed due to timeout', null, 'Token Renewal Failed');
               }
 
               self._saveItem(self.CONSTANTS.STORAGE.RENEW_STATUS + resource, self.CONSTANTS.TOKEN_RENEW_STATUS_CANCELED);
@@ -7544,6 +7675,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           var frameCheck = frameName;
           setTimeout(function () {
             var frameHandle = self._addAdalFrame(frameCheck);
+
             if (frameHandle.src === '' || frameHandle.src === 'about:blank') {
               frameHandle.src = urlNavigate;
               self._loadFrame(urlNavigate, frameCheck);
@@ -7571,6 +7703,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           }
 
           var token = this.getCachedToken(resource);
+
           if (token) {
             this.info('Token is already in cache for resource:' + resource);
             callback(null, token, null);
@@ -7589,6 +7722,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
             //Active renewals contains the state for each renewal.
             this.registerCallback(this._activeRenewals[resource], resource, callback);
           } else {
+            this._requestType = this.REQUEST_TYPE.RENEW_TOKEN;
             if (resource === this.config.clientId) {
               // App uses idtoken to send to api endpoints
               // Default resource is tracked as clientid to store this token
@@ -7600,6 +7734,50 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           }
         };
 
+        /**
+        * Checks if a signed in user exists or login_hint is passed in extraQueryParameter.
+        * Acquires token from the cache if it is not expired. Otherwise sends request to AAD to obtain a new token.
+        * @param {string}   resource  ResourceUri identifying the target resource
+        * @param {tokenCallback} callback -  The callback provided by the caller. It will be called with token or error.
+        */
+        _AuthenticationContext.prototype.acquireTokenUnsignedUser = function (resource, callback) {
+          if (this._isEmpty(resource)) {
+            this.warn('resource is required');
+            callback('resource is required', null, 'resource is required');
+            return;
+          }
+
+          var token = this.getCachedToken(resource);
+
+          if (token) {
+            this.info('Token is already in cache for resource:' + resource);
+            callback(null, token, null);
+            return;
+          }
+
+          if (!this._user && !(this.config.extraQueryParameter && this.config.extraQueryParameter.indexOf('login_hint') !== -1)) {
+            this.warn('User login is required');
+            callback('User login is required', null, 'login required');
+            return;
+          }
+
+          // refresh attept with iframe
+          //Already renewing for this resource, callback when we get the token.
+          if (this._activeRenewals[resource]) {
+            //Active renewals contains the state for each renewal.
+            this.registerCallback(this._activeRenewals[resource], resource, callback);
+          } else {
+            this._requestType = this.REQUEST_TYPE.RENEW_TOKEN;
+            if (resource === this.config.clientId) {
+              // App uses idtoken to send to api endpoints
+              // Default resource is tracked as clientid to store this token
+              this.verbose('renewing idtoken');
+              this._renewIdToken(callback, 'id_token token');
+            } else {
+              this._renewToken(resource, callback, 'id_token token');
+            }
+          }
+        };
         /**
         * Acquires token (interactive flow using a popUp window) by sending request to AAD to obtain a new token.
         * @param {string}   resource  ResourceUri identifying the target resource
@@ -7627,9 +7805,13 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
           var expectedState = this._guid() + '|' + resource;
           this.config.state = expectedState;
-          window.renewStates.push(expectedState);
+          this._renewStates.push(expectedState);
+          this._requestType = this.REQUEST_TYPE.RENEW_TOKEN;
           this.verbose('Renew token Expected state: ' + expectedState);
-          var urlNavigate = this._getNavigateUrl('token', resource) + '&prompt=select_account';
+          // remove the existing prompt=... query parameter and add prompt=select_account
+          var urlNavigate = this._urlRemoveQueryStringParameter(this._getNavigateUrl('token', resource), 'prompt');
+          urlNavigate = urlNavigate + '&prompt=select_account';
+
           if (extraQueryParameters) {
             urlNavigate += encodeURIComponent(extraQueryParameters);
           }
@@ -7660,6 +7842,8 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
             return;
           }
 
+          var callback = this.callback;
+
           if (!this._user) {
             this.warn('User login is required');
             callback('User login is required', null, 'login required');
@@ -7674,9 +7858,11 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
           var expectedState = this._guid() + '|' + resource;
           this.config.state = expectedState;
-          window.renewStates.push(expectedState);
           this.verbose('Renew token Expected state: ' + expectedState);
-          var urlNavigate = this._getNavigateUrl('token', resource) + '&prompt=select_account';
+
+          // remove the existing prompt=... query parameter and add prompt=select_account
+          var urlNavigate = this._urlRemoveQueryStringParameter(this._getNavigateUrl('token', resource), 'prompt');
+          urlNavigate = urlNavigate + '&prompt=select_account';
           if (extraQueryParameters) {
             urlNavigate += encodeURIComponent(extraQueryParameters);
           }
@@ -7690,9 +7876,8 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           urlNavigate = this._addHintParameters(urlNavigate);
           this._acquireTokenInProgress = true;
           this.info('acquireToken interactive is called for the resource ' + resource);
-
           this._saveItem(this.CONSTANTS.STORAGE.LOGIN_REQUEST, window.location.href);
-          this._saveItem(this.CONSTANTS.STORAGE.STATE_RENEW, expectedState);
+          this._saveItem(this.CONSTANTS.STORAGE.STATE_RENEW, expectedState, true);
           this.promptUser(urlNavigate);
         };
         /**
@@ -7712,24 +7897,28 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
          * Clears cache items.
          */
         _AuthenticationContext.prototype.clearCache = function () {
-          this._saveItem(this.CONSTANTS.STORAGE.ACCESS_TOKEN_KEY, '');
-          this._saveItem(this.CONSTANTS.STORAGE.EXPIRATION_KEY, 0);
+          this._saveItem(this.CONSTANTS.STORAGE.LOGIN_REQUEST, '');
+          this._saveItem(this.CONSTANTS.STORAGE.ANGULAR_LOGIN_REQUEST, '');
           this._saveItem(this.CONSTANTS.STORAGE.SESSION_STATE, '');
           this._saveItem(this.CONSTANTS.STORAGE.STATE_LOGIN, '');
-          window.renewStates = [];
-          this._saveItem(this.CONSTANTS.STORAGE.USERNAME, '');
+          this._saveItem(this.CONSTANTS.STORAGE.STATE_RENEW, '');
+          this._renewStates = [];
+          this._saveItem(this.CONSTANTS.STORAGE.NONCE_IDTOKEN, '');
           this._saveItem(this.CONSTANTS.STORAGE.IDTOKEN, '');
           this._saveItem(this.CONSTANTS.STORAGE.ERROR, '');
           this._saveItem(this.CONSTANTS.STORAGE.ERROR_DESCRIPTION, '');
+          this._saveItem(this.CONSTANTS.STORAGE.LOGIN_ERROR, '');
+          this._saveItem(this.CONSTANTS.STORAGE.LOGIN_ERROR, '');
           var keys = this._getItem(this.CONSTANTS.STORAGE.TOKEN_KEYS);
 
           if (!this._isEmpty(keys)) {
             keys = keys.split(this.CONSTANTS.RESOURCE_DELIMETER);
-            for (var i = 0; i < keys.length; i++) {
+            for (var i = 0; i < keys.length && keys[i] !== ""; i++) {
               this._saveItem(this.CONSTANTS.STORAGE.ACCESS_TOKEN_KEY + keys[i], '');
               this._saveItem(this.CONSTANTS.STORAGE.EXPIRATION_KEY + keys[i], 0);
             }
           }
+
           this._saveItem(this.CONSTANTS.STORAGE.TOKEN_KEYS, '');
         };
 
@@ -7741,6 +7930,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           this._saveItem(this.CONSTANTS.STORAGE.STATE_RENEW, '');
           this._saveItem(this.CONSTANTS.STORAGE.ERROR, '');
           this._saveItem(this.CONSTANTS.STORAGE.ERROR_DESCRIPTION, '');
+
           if (this._hasResource(resource)) {
             this._saveItem(this.CONSTANTS.STORAGE.ACCESS_TOKEN_KEY + resource, '');
             this._saveItem(this.CONSTANTS.STORAGE.EXPIRATION_KEY + resource, 0);
@@ -7805,6 +7995,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
           // frame is used to get idtoken
           var idtoken = this._getItem(this.CONSTANTS.STORAGE.IDTOKEN);
+
           if (!this._isEmpty(idtoken)) {
             this.info('User exists in cache: ');
             this._user = this._createUser(idtoken);
@@ -7926,6 +8117,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
             stateResponse: '',
             requestType: this.REQUEST_TYPE.UNKNOWN
           };
+
           if (parameters) {
             requestInfo.parameters = parameters;
             if (parameters.hasOwnProperty(this.CONSTANTS.ERROR_DESCRIPTION) || parameters.hasOwnProperty(this.CONSTANTS.ACCESS_TOKEN) || parameters.hasOwnProperty(this.CONSTANTS.ID_TOKEN)) {
@@ -7946,22 +8138,17 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
               // async calls can fire iframe and login request at the same time if developer does not use the API as expected
               // incoming callback needs to be looked up to find the request type
-              if (stateResponse === this._getItem(this.CONSTANTS.STORAGE.STATE_LOGIN)) {
-                requestInfo.requestType = this.REQUEST_TYPE.LOGIN;
-                requestInfo.stateMatch = true;
-                return requestInfo;
-              } else if (stateResponse === this._getItem(this.CONSTANTS.STORAGE.STATE_RENEW)) {
-                requestInfo.requestType = this.REQUEST_TYPE.RENEW_TOKEN;
-                requestInfo.stateMatch = true;
+              if (this._matchState(requestInfo)) {
+                // loginRedirect or acquireTokenRedirect
                 return requestInfo;
               }
 
               // external api requests may have many renewtoken requests for different resource
               if (!requestInfo.stateMatch && window.parent) {
-                var statesInParentContext = window.parent.renewStates;
+                requestInfo.requestType = this._requestType;
+                var statesInParentContext = this._renewStates;
                 for (var i = 0; i < statesInParentContext.length; i++) {
                   if (statesInParentContext[i] === requestInfo.stateResponse) {
-                    requestInfo.requestType = this.REQUEST_TYPE.RENEW_TOKEN;
                     requestInfo.stateMatch = true;
                     break;
                   }
@@ -7969,8 +8156,60 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
               }
             }
           }
-
           return requestInfo;
+        };
+
+        /**
+        * Matches nonce from the request with the response.
+        * @ignore
+        */
+        _AuthenticationContext.prototype._matchNonce = function (user) {
+          var requestNonce = this._getItem(this.CONSTANTS.STORAGE.NONCE_IDTOKEN);
+
+          if (requestNonce) {
+            requestNonce = requestNonce.split(this.CONSTANTS.CACHE_DELIMETER);
+            for (var i = 0; i < requestNonce.length; i++) {
+              if (requestNonce[i] === user.profile.nonce) {
+                return true;
+              }
+            }
+          }
+
+          return false;
+        };
+
+        /**
+        * Matches state from the request with the response.
+        * @ignore
+        */
+        _AuthenticationContext.prototype._matchState = function (requestInfo) {
+          var loginStates = this._getItem(this.CONSTANTS.STORAGE.STATE_LOGIN);
+
+          if (loginStates) {
+            loginStates = loginStates.split(this.CONSTANTS.CACHE_DELIMETER);
+            for (var i = 0; i < loginStates.length; i++) {
+              if (loginStates[i] === requestInfo.stateResponse) {
+                requestInfo.requestType = this.REQUEST_TYPE.LOGIN;
+                requestInfo.stateMatch = true;
+                return true;
+              }
+            }
+          }
+
+          var acquireTokenStates = this._getItem(this.CONSTANTS.STORAGE.STATE_RENEW);
+
+          if (acquireTokenStates) {
+            acquireTokenStates = acquireTokenStates.split(this.CONSTANTS.CACHE_DELIMETER);
+            for (var i = 0; i < acquireTokenStates.length; i++) {
+              if (acquireTokenStates[i] === requestInfo.stateResponse) {
+                requestInfo.requestType = this.REQUEST_TYPE.RENEW_TOKEN;
+                requestInfo.stateMatch = true;
+                return true;
+              }
+            }
+          }
+
+          return false;
         };
 
         /**
@@ -7980,6 +8219,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
         _AuthenticationContext.prototype._getResourceFromState = function (state) {
           if (state) {
             var splitIndex = state.indexOf('|');
+
             if (splitIndex > -1 && splitIndex + 1 < state.length) {
               return state.substring(splitIndex + 1);
             }
@@ -8026,6 +8266,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
                   keys = this._getItem(this.CONSTANTS.STORAGE.TOKEN_KEYS) || '';
                   this._saveItem(this.CONSTANTS.STORAGE.TOKEN_KEYS, keys + resource + this.CONSTANTS.RESOURCE_DELIMETER);
                 }
+
                 // save token with related resource
                 this._saveItem(this.CONSTANTS.STORAGE.ACCESS_TOKEN_KEY + resource, requestInfo.parameters[this.CONSTANTS.ACCESS_TOKEN]);
                 this._saveItem(this.CONSTANTS.STORAGE.EXPIRATION_KEY + resource, this._expiresIn(requestInfo.parameters[this.CONSTANTS.EXPIRES_IN]));
@@ -8034,13 +8275,11 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
               if (requestInfo.parameters.hasOwnProperty(this.CONSTANTS.ID_TOKEN)) {
                 this.info('Fragment has id token');
                 this._loginInProgress = false;
-
                 this._user = this._createUser(requestInfo.parameters[this.CONSTANTS.ID_TOKEN]);
-
                 if (this._user && this._user.profile) {
-                  if (this._user.profile.nonce !== this._getItem(this.CONSTANTS.STORAGE.NONCE_IDTOKEN)) {
+                  if (!this._matchNonce(this._user)) {
+                    this._saveItem(this.CONSTANTS.STORAGE.LOGIN_ERROR, 'Nonce received: ' + this._user.profile.nonce + ' is not same as requested: ' + this._getItem(this.CONSTANTS.STORAGE.NONCE_IDTOKEN));
                     this._user = null;
-                    this._saveItem(this.CONSTANTS.STORAGE.LOGIN_ERROR, 'Nonce is not same as ' + this._idTokenNonce);
                   } else {
                     this._saveItem(this.CONSTANTS.STORAGE.IDTOKEN, requestInfo.parameters[this.CONSTANTS.ID_TOKEN]);
 
@@ -8051,19 +8290,25 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
                       keys = this._getItem(this.CONSTANTS.STORAGE.TOKEN_KEYS) || '';
                       this._saveItem(this.CONSTANTS.STORAGE.TOKEN_KEYS, keys + resource + this.CONSTANTS.RESOURCE_DELIMETER);
                     }
+
                     this._saveItem(this.CONSTANTS.STORAGE.ACCESS_TOKEN_KEY + resource, requestInfo.parameters[this.CONSTANTS.ID_TOKEN]);
                     this._saveItem(this.CONSTANTS.STORAGE.EXPIRATION_KEY + resource, this._user.profile.exp);
                   }
                 } else {
+                  requestInfo.parameters['error'] = 'invalid id_token';
+                  requestInfo.parameters['error_description'] = 'Invalid id_token. id_token: ' + requestInfo.parameters[this.CONSTANTS.ID_TOKEN];
                   this._saveItem(this.CONSTANTS.STORAGE.ERROR, 'invalid id_token');
                   this._saveItem(this.CONSTANTS.STORAGE.ERROR_DESCRIPTION, 'Invalid id_token. id_token: ' + requestInfo.parameters[this.CONSTANTS.ID_TOKEN]);
                 }
               }
             } else {
+              requestInfo.parameters['error'] = 'Invalid_state';
+              requestInfo.parameters['error_description'] = 'Invalid_state. state: ' + requestInfo.stateResponse;
               this._saveItem(this.CONSTANTS.STORAGE.ERROR, 'Invalid_state');
               this._saveItem(this.CONSTANTS.STORAGE.ERROR_DESCRIPTION, 'Invalid_state. state: ' + requestInfo.stateResponse);
             }
           }
+
           this._saveItem(this.CONSTANTS.STORAGE.RENEW_STATUS + resource, this.CONSTANTS.TOKEN_RENEW_STATUS_COMPLETED);
         };
 
@@ -8116,7 +8361,6 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
         _AuthenticationContext.prototype._getHostFromUri = function (uri) {
           // remove http:// or https:// from uri
           var extractedUri = String(uri).replace(/^(https?:)\/\//, '');
-
           extractedUri = extractedUri.split('/')[0];
           return extractedUri;
         };
@@ -8128,30 +8372,74 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
         _AuthenticationContext.prototype.handleWindowCallback = function (hash) {
           // This is for regular javascript usage for redirect handling
           // need to make sure this is for callback
-          if (hash == null) hash = window.location.hash;
+          if (hash == null) {
+            hash = window.location.hash;
+          }
+
           if (this.isCallback(hash)) {
-            var requestInfo = this.getRequestInfo(hash);
-            this.info('Returned from redirect url');
-            this.saveTokenFromHash(requestInfo);
-            var token = null,
-                callback = null;
+            var self = null;
+            var isPopup = false;
+
+            if (this._openedWindows.length > 0 && this._openedWindows[this._openedWindows.length - 1].opener && this._openedWindows[this._openedWindows.length - 1].opener._adalInstance) {
+              self = this._openedWindows[this._openedWindows.length - 1].opener._adalInstance;
+              isPopup = true;
+            } else if (window.parent && window.parent._adalInstance) {
+              self = window.parent._adalInstance;
+            }
+
+            var requestInfo = self.getRequestInfo(hash);
+            var token,
+                tokenReceivedCallback,
+                tokenType = null,
+                silentLogin = false;
+
+            if (isPopup || window.parent !== window) {
+              tokenReceivedCallback = self._callBackMappedToRenewStates[requestInfo.stateResponse];
+            } else {
+              tokenReceivedCallback = self.callback;
+            }
+
+            self.info("Returned from redirect url");
+            self.saveTokenFromHash(requestInfo);
+
             if (requestInfo.requestType === this.REQUEST_TYPE.RENEW_TOKEN && window.parent) {
-              // iframe call but same single page
-              this.verbose('Window is in iframe');
-              callback = window.parent.callBackMappedToRenewStates[requestInfo.stateResponse];
-              token = requestInfo.parameters[this.CONSTANTS.ACCESS_TOKEN] || requestInfo.parameters[this.CONSTANTS.ID_TOKEN];
+              if (window.parent !== window) {
+                self.verbose("Window is in iframe, acquiring token silently");
+              } else {
+                self.verbose("acquiring token interactive in progress");
+              }
+
+              token = requestInfo.parameters[self.CONSTANTS.ACCESS_TOKEN] || requestInfo.parameters[self.CONSTANTS.ID_TOKEN];
+              tokenType = self.CONSTANTS.ACCESS_TOKEN;
             } else if (requestInfo.requestType === this.REQUEST_TYPE.LOGIN) {
-              callback = this.callback;
-              token = requestInfo.parameters[this.CONSTANTS.ID_TOKEN];
+              token = requestInfo.parameters[self.CONSTANTS.ID_TOKEN];
+              tokenType = self.CONSTANTS.ID_TOKEN;
+
+              if (window.parent !== window) {
+                silentLogin = true;
+              }
             }
+
+            var errorDesc = requestInfo.parameters[self.CONSTANTS.ERROR_DESCRIPTION];
+            var error = requestInfo.parameters[self.CONSTANTS.ERROR];
             try {
-              if (callback) callback(this._getItem(this.CONSTANTS.STORAGE.ERROR_DESCRIPTION), token, this._getItem(this.CONSTANTS.STORAGE.ERROR));
+              if (tokenReceivedCallback) {
+                tokenReceivedCallback(errorDesc, token, error, tokenType);
+              }
+              if (silentLogin && token) {
+                if (self.callback) {
+                  self.callback(errorDesc, token, error, tokenType);
+                }
+              }
             } catch (err) {
-              this.error('Error occurred in user defined callback function', err);
+              self.error("Error occurred in user defined callback function: " + err);
             }
-            if (!this.popUp) {
+
+            if (window.parent === window && !isPopup) {
               window.location.hash = '';
-              if (this.config.navigateToLoginRequestUrl) window.location.href = this._getItem(this.CONSTANTS.STORAGE.LOGIN_REQUEST);
+              if (self.config.navigateToLoginRequestUrl) {
+                window.location.href = self._getItem(self.CONSTANTS.STORAGE.LOGIN_REQUEST);
+              }
             }
           }
         };
@@ -8178,6 +8466,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
         _AuthenticationContext.prototype._extractIdToken = function (encodedIdToken) {
           // id token will be decoded to get the username
           var decodedToken = this._decodeJwt(encodedIdToken);
+
           if (!decodedToken) {
             return null;
           }
@@ -8185,6 +8474,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           try {
             var base64IdToken = decodedToken.JWSPayload;
             var base64Decoded = this._base64DecodeStringUrlSafe(base64IdToken);
+
             if (!base64Decoded) {
               this.info('The returned id_token could not be base64 url safe decoded.');
               return null;
@@ -8206,6 +8496,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
         _AuthenticationContext.prototype._base64DecodeStringUrlSafe = function (base64IdToken) {
           // html5 should support atob function for decoding
           base64IdToken = base64IdToken.replace(/-/g, '+').replace(/_/g, '/');
+
           if (window.atob) {
             return decodeURIComponent(escape(window.atob(base64IdToken))); // jshint ignore:line
           } else {
@@ -8219,6 +8510,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           base64IdToken = String(base64IdToken).replace(/=+$/, '');
 
           var length = base64IdToken.length;
+
           if (length % 4 === 1) {
             throw new Error('The token to be decoded is not correctly encoded.');
           }
@@ -8232,6 +8524,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
               c2,
               c3,
               decoded = '';
+
           for (var i = 0; i < length; i += 4) {
             //Every 4 base64 encoded character will be converted to 3 byte string, which is 24 bits
             // then 6 bits per base64 encoded character
@@ -8282,6 +8575,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
           var idTokenPartsRegex = /^([^\.\s]*)\.([^\.\s]+)\.([^\.\s]*)$/;
 
           var matches = idTokenPartsRegex.exec(jwtToken);
+
           if (!matches || matches.length < 4) {
             this.warn('The returned id_token is not parseable.');
             return null;
@@ -8310,6 +8604,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
          */
         _AuthenticationContext.prototype._serialize = function (responseType, obj, resource) {
           var str = [];
+
           if (obj !== null) {
             str.push('?response_type=' + responseType);
             str.push('client_id=' + encodeURIComponent(obj.clientId));
@@ -8342,13 +8637,15 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
         _AuthenticationContext.prototype._deserialize = function (query) {
           var match,
               pl = /\+/g,
-              // Regex for replacing addition symbol with a space
+
+          // Regex for replacing addition symbol with a space
           search = /([^&=]+)=([^&]*)/g,
               decode = function decode(s) {
             return decodeURIComponent(s.replace(pl, ' '));
           },
               obj = {};
           match = search.exec(query);
+
           while (match) {
             obj[decode(match[1])] = decode(match[2]);
             match = search.exec(query);
@@ -8363,6 +8660,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
          */
         _AuthenticationContext.prototype._decimalToHex = function (number) {
           var hex = number.toString(16);
+
           while (hex.length < 2) {
             hex = '0' + hex;
           }
@@ -8466,6 +8764,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
             if (document.createElement && document.documentElement && (window.opera || window.navigator.userAgent.indexOf('MSIE 5.0') === -1)) {
               var ifr = document.createElement('iframe');
               ifr.setAttribute('id', iframeId);
+              ifr.setAttribute('aria-hidden', 'true');
               ifr.style.visibility = 'hidden';
               ifr.style.position = 'absolute';
               ifr.style.width = ifr.style.height = ifr.borderWidth = '0px';
@@ -8486,7 +8785,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
          * Saves the key-value pair in the cache
          * @ignore
          */
-        _AuthenticationContext.prototype._saveItem = function (key, obj) {
+        _AuthenticationContext.prototype._saveItem = function (key, obj, preserve) {
 
           if (this.config && this.config.cacheLocation && this.config.cacheLocation === 'localStorage') {
 
@@ -8495,7 +8794,12 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
               return false;
             }
 
-            localStorage.setItem(key, obj);
+            if (preserve) {
+              var value = this._getItem(key) || '';
+              localStorage.setItem(key, value + obj + this.CONSTANTS.CACHE_DELIMETER);
+            } else {
+              localStorage.setItem(key, obj);
+            }
 
             return true;
           }
@@ -8574,7 +8878,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
          * @ignore
          */
         _AuthenticationContext.prototype._cloneConfig = function (obj) {
-          if (null === obj || 'object' !== (typeof obj === 'undefined' ? 'undefined' : (0, _typeof6.default)(obj))) {
+          if (null === obj || 'object' !== (typeof obj === 'undefined' ? 'undefined' : (0, _typeof3.default)(obj))) {
             return obj;
           }
 
@@ -8730,7 +9034,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       exports.__esModule = true;
 
-      var _typeof2 = __webpack_require__(26);
+      var _typeof2 = __webpack_require__(18);
 
       var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -8763,7 +9067,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       var _create2 = _interopRequireDefault(_create);
 
-      var _typeof2 = __webpack_require__(26);
+      var _typeof2 = __webpack_require__(18);
 
       var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -8904,9 +9208,9 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       // 19.1.2.1 Object.assign(target, source, ...)
 
-      var getKeys = __webpack_require__(19);
+      var getKeys = __webpack_require__(20);
       var gOPS = __webpack_require__(36);
-      var pIE = __webpack_require__(22);
+      var pIE = __webpack_require__(23);
       var toObject = __webpack_require__(33);
       var IObject = __webpack_require__(46);
       var $assign = _assign4.default;
@@ -9074,7 +9378,7 @@ function _interopRequireDefault2(obj) { return obj && obj.__esModule ? obj : { d
 
       var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-      var _createClass2 = __webpack_require__(23);
+      var _createClass2 = __webpack_require__(24);
 
       var _createClass3 = _interopRequireDefault(_createClass2);
 

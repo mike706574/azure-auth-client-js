@@ -1,4 +1,4 @@
-import * as AuthenticationContext from 'adal-angular';
+import * as AuthenticationContext from './adal/adal';
 import * as struct from './struct';
 import arity from './arity';
 import { decode, addIdentity } from './common';
@@ -34,8 +34,13 @@ function getToken(authContext, resource) {
     else {
       authContext.acquireToken(resource, (_, token, error) => {
         if(error) {
-          authContext.login();
-          resolve({ok: false, reason: error});
+          if(error === 'invalid_resource') {
+            resolve({ok: false, reason: 'invalid-resource', resource});
+          }
+          else {
+            authContext.login();
+            resolve({ok: false, reason: error});
+          }
         }
         else {
           resolve(decode(token));
@@ -131,9 +136,17 @@ export default class AdalAuthClient {
         config.extraQueryParameter = `nux=1&domain_hint=${config.domain}`;
       }
 
-      if(!config.tenant) {
+      if(config.tenantId) {
+        struct.requiredString(config, 'auth config', 'tenantId');
+        config.tenant = config.tenantId;
+      }
+      else if(config.tenantName) {
         struct.requiredString(config, 'auth config', 'tenantName');
         config.tenant = `${config.tenantName}.onmicrosoft.com`;
+      }
+      else if(config.tenant) {
+        struct.requiredString(config, 'auth config', 'tenant');
+        config.tenant = config.tenant;
       }
 
       struct.requiredStrings(config, 'auth config',

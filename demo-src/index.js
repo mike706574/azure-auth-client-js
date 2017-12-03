@@ -2,10 +2,10 @@ import AuthClient from '../lib/azure-auth-client';
 
 console.log(`Loading demo! URL is ${window.location.href}.`);
 
-const RESOURCE = '<resource>';
+const resourceId = '<resourceId>';
 
 const config = {azureAuthConfig: {clientType: 'ADAL',
-                                  tenantName: '<tenantName>',
+                                  tenantId: '<tenantId>',
                                   clientId: '<clientId>',
                                   domain: '<domain>'}};
 
@@ -18,10 +18,11 @@ window.logOut = async () => {
 };
 
 async function start() {
-  const response = await client.getIdentityToken();
+  let response = await client.getIdentityToken();
 
-  console.log('Response', response);
+  console.log('Identity token response.', response);
   if(response.ok) {
+    console.log("Identity token.", response.token);
     const message = `Logged in as ${response.name}.`;
     document.getElementById("text").innerHTML = message;
   }
@@ -33,6 +34,16 @@ async function start() {
     else {
       document.getElementById("text").innerHTML = response.reason;
     }
+  }
+
+  response = await client.getAccessToken(resourceId);
+  console.log('Access token response.', response);
+
+  if(response.ok) {
+    console.log("Access token.", response.token);
+  }
+  else {
+    console.log("Failed to get access token.", response);
   }
 }
 
