@@ -53,7 +53,6 @@ function getToken(authContext, resource) {
 async function getTokenAndAddIdentity(authContext, resource) {
   const response = await getToken(authContext, resource);
   return addIdentity(response);
-
 }
 
 class DummyAuthenticationContext {
@@ -84,6 +83,41 @@ function buildAdalContext(config) {
                              this.authContext.config.clientId),
               60000);
   return authContext;
+}
+
+export function validateConfig(config) {
+  config.expireOffsetSeconds = config.expireOffsetSeconds || 30;
+  config.cacheLocation = config.cacheLocation || 'localStorage';
+  config.redirectUri = config.redirectUri || window.location.origin;
+
+  if(!config.extraQueryParameter) {
+    if(config.domain) {
+      config.extraQueryParameter = `nux=1&domain_hint=${config.domain}`;
+    }
+    else {
+      config.extraQueryParameter = 'nux=1';
+    }
+  }
+
+  if(config.tenantId) {
+    struct.requiredString(config, 'auth config', 'tenantId');
+    config.tenant = config.tenantId;
+  }
+  else if(config.tenantName) {
+    struct.requiredString(config, 'auth config', 'tenantName');
+    config.tenant = `${config.tenantName}.onmicrosoft.com`;
+  }
+  else if(config.tenant) {
+    struct.requiredString(config, 'auth config', 'tenant');
+    config.tenant = config.tenant;
+  }
+
+  struct.requiredStrings(config, 'auth config',
+                         ['tenant', 'extraQueryParameter',
+                          'redirectUri', 'cacheLocation']);
+  struct.requiredInt(config, 'auth config', 'expireOffsetSeconds');
+
+  return config;
 }
 
 /**
@@ -127,34 +161,8 @@ export default class AdalAuthClient {
 
     }
     else {
-      config.expireOffsetSeconds = config.expireOffsetSeconds || 30;
-      config.cacheLocation = config.cacheLocation || 'localStorage';
-      config.redirectUri = config.redirectUri || window.location.origin;
-
-      if(!config.extraQueryParameter) {
-        struct.requiredString(config, 'auth config', 'domain');
-        config.extraQueryParameter = `nux=1&domain_hint=${config.domain}`;
-      }
-
-      if(config.tenantId) {
-        struct.requiredString(config, 'auth config', 'tenantId');
-        config.tenant = config.tenantId;
-      }
-      else if(config.tenantName) {
-        struct.requiredString(config, 'auth config', 'tenantName');
-        config.tenant = `${config.tenantName}.onmicrosoft.com`;
-      }
-      else if(config.tenant) {
-        struct.requiredString(config, 'auth config', 'tenant');
-        config.tenant = config.tenant;
-      }
-
-      struct.requiredStrings(config, 'auth config',
-                             ['tenant', 'extraQueryParameter',
-                              'redirectUri', 'cacheLocation']);
-      struct.requiredInt(config, 'auth config', 'expireOffsetSeconds');
-
-      authContext = buildAdalContext(config);
+      const validatedConfig = validateConfig(config);
+      authContext = buildAdalContext(validatedConfig);
     }
     return new AdalAuthClient(authContext);
   }
