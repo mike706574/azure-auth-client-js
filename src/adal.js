@@ -79,9 +79,6 @@ function buildAdalContext(config) {
   window.AuthenticationContext = authContext;
   authContext.getUser(() => {});
   authContext.handleWindowCallback();
-  setInterval(() => getToken(authContext,
-                             this.authContext.config.clientId),
-              60000);
   return authContext;
 }
 
