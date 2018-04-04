@@ -1,8 +1,6 @@
-# azure-auth-client-alpha
+# azure-auth-client
 
 A lightweight abstraction around adal.js. Use this to get identity and access tokens and information about the user using your application.
-
-Please note that this is alpha quality software at the moment. I'm probably mostly done changing the API, though. The name of the node module will change to `azure-auth-client` rather than `azure-auth-client-alpha` when I feel comfortable doing that.
 
 ## Example
 
