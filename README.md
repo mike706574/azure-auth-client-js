@@ -1,5 +1,7 @@
 # azure-auth-client
 
+[![npm version](https://badge.fury.io/js/azure-auth-client.svg)](https://badge.fury.io/js/azure-auth-client)
+
 A lightweight abstraction around adal.js. Use this to get identity and access tokens and information about the user using your application.
 
 ## Example
