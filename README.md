@@ -14,7 +14,7 @@ const config = {clientType: "ADAL",
                 tenantId: "c834c34e-bbd3-4ea1-c2c2-51daeff91aa32",
                 domain: "bar.com"};
 
-const authClient = AuthClient.build(config)
+const authClient = AuthClient.build(config);
 
 const {ok, token, name, roles} = authClient.getIdentityToken();
 
