@@ -14,7 +14,6 @@ export default class AuthClient {
    * @returns {AuthClient} AuthClient instance.
    */
   static build(config) {
-    console.log("build!!!");
     let azureAuthConfig;
 
     if(config[CONFIG_KEY]) {
