@@ -1,6 +1,6 @@
 {
   "name": "azure-auth-client",
-  "version": "0.0.5-alpha1",
+  "version": "0.0.5-alpha2",
   "description": "An Azure auth client.",
   "main": "lib/azure-auth-client.js",
   "scripts": {
