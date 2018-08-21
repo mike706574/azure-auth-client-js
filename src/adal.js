@@ -8,7 +8,9 @@ function handleLogin(authContext) {
 
   if(error === undefined) {
     authContext.login();
-    return {ok: false, reason: 'login-triggered'};
+    return {ok: false,
+            loginTriggered: true,
+            reason: 'login-triggered'};
   }
 
   if(error === '') {
@@ -18,10 +20,17 @@ function handleLogin(authContext) {
   const message = localStorage['adal.error.description'];
 
   if(error === 'access_denied') {
-    return {ok: false, reason: 'access-denied', message};
+    return {ok: false,
+            loginTriggered: false,
+            reason: 'access-denied',
+            message};
   }
 
-  return {ok: false, reason: 'login-error', error, message};
+  return {ok: false,
+          loginTriggered: false,
+          reason: 'login-error',
+          error,
+          message};
 }
 
 function getToken(authContext, resource) {
@@ -34,12 +43,23 @@ function getToken(authContext, resource) {
     else {
       authContext.acquireToken(resource, (_, token, error) => {
         if(error) {
-          if(error === 'invalid_resource') {
-            resolve({ok: false, reason: 'invalid-resource', resource});
+          if(error === 'interaction_required') {
+            resolve({ok: false,
+                     loginTriggered: false,
+                     reason: 'interaction-required',
+                     resource});
+          }
+          else if(error === 'invalid_resource') {
+            resolve({ok: false,
+                     loginTriggered: false,
+                     reason: 'invalid-resource',
+                     resource});
           }
           else {
             authContext.login();
-            resolve({ok: false, reason: error});
+            resolve({ok: false,
+                     loginTriggered: true,
+                     reason: error});
           }
         }
         else {
@@ -180,7 +200,7 @@ export default class AdalAuthClient {
    *               familyName: "JONES",
    *               givenName: "FRED",
    *               roles: ["ADMIN"]}
-   *   error   => {ok: false, reason: "...", ...}
+   *   error   => {ok: false, loginTriggered: false, reason: "...", ...}
    *
    * @returns {Object} A response containing both the encoded and decoded
    * access token as well as any identity information present in the token's
@@ -203,7 +223,7 @@ export default class AdalAuthClient {
    *               familyName: "JONES",
    *               givenName: "FRED",
    *               roles: ["ADMIN"]}
-   *   error   => {ok: false, reason: "...", ...}
+   *   error   => {ok: false, loginTriggered: false, reason: "...", ...}
    *
    * @returns {Object} A response containing both the encoded and decoded
    * identity token as well as all identity information present in the token's

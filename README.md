@@ -121,17 +121,73 @@ Now you can use this auth client object anywhere to get an identity token or acc
 
 ```js
 const response = authClient.getIdentityToken();
-  => {ok: true, token: "eyJ0eXAiOi...", decodedToken: ...}
+  => {ok: true, loginTriggered: false, token: "eyJ0eXAiOi...", decodedToken: ...}
 
 const response = authClient.getAccessToken("foo");
-  => {ok: true, token: "eyJ0eXAiOi...", decodedToken: ...}
+  => {ok: true, loginTriggered: false, token: "eyJ0eXAiOi...", decodedToken: ...}
 ```
 
-If we fail to get a token for some reason, the `ok` property of the response will be false, and there will probably be some information attached to the response.
+### Token Responses
+
+#### Success
+
+If we got a token, the `ok` property of the response will be `true`, and the `token` and `decodedToken` properties will be present:
+
+```js
+{ok: true,
+ loginTriggered: false,
+ token: "eyJ0eXAiOi...",
+ decodedToken: ...}
+```
+
+#### Login Triggered
+
+If the user needs to be logged in, both token methods will trigger a redirect to the login page and the `loginTriggered` property will be `true`:
+
+```js
+{ok: true,
+ loginTriggered: true,
+ reason: "interaction-required",
+ resource: "5ef91fa4-6170-4c8e-b946-1d99e7d8d59c"}
+```
+
+#### Access Denied
+
+If the user is not authorized to get a token for the resource, the `reason` property will be set to `access-denied`:
+
+```js
+{ok: true,
+ loginTriggered: true,
+ reason: "access-denied",
+ resource: "5ef91fa4-6170-4c8e-b946-1d99e7d8d59c",
+ message: "..."}
+```
+
+#### Invalid resource
+
+If you ask for a token for an invalid resource, the `reason` property will be set to `invalid-resource`:
+
+```js
+{ok: true,
+ loginTriggered: true,
+ reason: "invalid-resource",
+ resource: "5ef91fa4-6170-4c8e-b946-1d99e7d8d59c"}
+```
+
+#### Generic failure
+
+If we fail to get a token for some other reason, the `ok` property of the response will be `false` and the `reason` property will contain a code indicating why we were unable to get a token:
+
+```js
+{ok: true,
+ loginTriggered: false,
+ reason: "some-reason",
+ resource: "5ef91fa4-6170-4c8e-b946-1d99e7d8d59c"}
+```
 
 ### Using tokens
 
-Assuming you didn't get redirected to log in and nothing broke, he response from these functions contains both the raw token and all the data contained inside of it, which means you don't have to decode it yourself or do any other manual parsing.
+Assuming you successfully retrieved a token, the response from these functions contains both the raw token and all the data contained inside of it, which means you don't have to decode it yourself or do any other manual parsing.
 
 Here's an example of what you might get. Results will vary depending on how your application is registered in Azure Active Directory.
 
