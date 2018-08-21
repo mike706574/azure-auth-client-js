@@ -10,11 +10,14 @@ function handleLogin(authContext) {
     authContext.login();
     return {ok: false,
             loginTriggered: true,
+            accessDenied: false,
             reason: 'login-triggered'};
   }
 
   if(error === '') {
-    return {ok: true};
+    return {ok: true,
+            loginTriggered: false,
+            accessDenied: false};
   }
 
   const message = localStorage['adal.error.description'];
@@ -22,12 +25,14 @@ function handleLogin(authContext) {
   if(error === 'access_denied') {
     return {ok: false,
             loginTriggered: false,
+            accessDenied: true,
             reason: 'access-denied',
             message};
   }
 
   return {ok: false,
           loginTriggered: false,
+          accessDenied: false,
           reason: 'login-error',
           error,
           message};
@@ -46,6 +51,7 @@ function getToken(authContext, resource) {
           if(error === 'interaction_required') {
             resolve({ok: false,
                      loginTriggered: false,
+                     accessDenied: false,
                      reason: 'interaction-required',
                      resource});
           }
@@ -53,12 +59,14 @@ function getToken(authContext, resource) {
             resolve({ok: false,
                      loginTriggered: false,
                      reason: 'invalid-resource',
+                     accessDenied: false,
                      resource});
           }
           else {
             authContext.login();
             resolve({ok: false,
                      loginTriggered: true,
+                     accessDenied: false,
                      reason: error});
           }
         }

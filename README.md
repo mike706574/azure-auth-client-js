@@ -121,10 +121,10 @@ Now you can use this auth client object anywhere to get an identity token or acc
 
 ```js
 const response = authClient.getIdentityToken();
-  => {ok: true, loginTriggered: false, token: "eyJ0eXAiOi...", decodedToken: ...}
+  => {ok: true, token: "eyJ0eXAiOi...", decodedToken: ...}
 
 const response = authClient.getAccessToken("foo");
-  => {ok: true, loginTriggered: false, token: "eyJ0eXAiOi...", decodedToken: ...}
+  => {ok: true, token: "eyJ0eXAiOi...", decodedToken: ...}
 ```
 
 ### Token Responses
@@ -136,6 +136,7 @@ If we got a token, the `ok` property of the response will be `true`, and the `to
 ```js
 {ok: true,
  loginTriggered: false,
+ accessDenied: false,
  token: "eyJ0eXAiOi...",
  decodedToken: ...}
 ```
@@ -147,7 +148,8 @@ If the user needs to be logged in, both token methods will trigger a redirect to
 ```js
 {ok: true,
  loginTriggered: true,
- reason: "interaction-required",
+ accessDenied: false,
+ reason: "login-triggered",
  resource: "5ef91fa4-6170-4c8e-b946-1d99e7d8d59c"}
 ```
 
@@ -158,6 +160,7 @@ If the user is not authorized to get a token for the resource, the `reason` prop
 ```js
 {ok: true,
  loginTriggered: true,
+ accessDenied: true,
  reason: "access-denied",
  resource: "5ef91fa4-6170-4c8e-b946-1d99e7d8d59c",
  message: "..."}
@@ -170,6 +173,7 @@ If you ask for a token for an invalid resource, the `reason` property will be se
 ```js
 {ok: true,
  loginTriggered: true,
+ accessDenied: false,
  reason: "invalid-resource",
  resource: "5ef91fa4-6170-4c8e-b946-1d99e7d8d59c"}
 ```
@@ -181,6 +185,7 @@ If we fail to get a token for some other reason, the `ok` property of the respon
 ```js
 {ok: true,
  loginTriggered: false,
+ accessDenied: false,
  reason: "some-reason",
  resource: "5ef91fa4-6170-4c8e-b946-1d99e7d8d59c"}
 ```
