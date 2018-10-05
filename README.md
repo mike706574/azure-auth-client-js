@@ -26,13 +26,13 @@ const {ok, token, name, roles} = authClient.getAccessToken("foo");
 Using npm:
 
 ```bash
-$ npm install azure-auth-client-alpha
+$ npm install azure-auth-client
 ```
 
 Using yarn:
 
 ```bash
-$ yarn add azure-auth-client-alpha
+$ yarn add azure-auth-client
 ```
 
 ## Why?
@@ -113,7 +113,7 @@ Then, use your config to create an `AuthClient`:
 const authClient = AuthClient.build(config);
 ```
 
-You can pass this guy around wherever you want. In a React or Redux app, injecting it via props or state seems like the best way to use it. Eventually, there should be examples of doing this somewhere.
+You can pass this guy around wherever you want. In a React or Redux app, injecting it via props or state or middleware seems like the best way to use it. Eventually, there should be examples of doing this somewhere.
 
 ### Getting tokens
 
