@@ -89,6 +89,28 @@ test('error fetching access token', async () => {
   expect(response.reason).toEqual('dummy-error');
 });
 
+test('access denied fetching access token', async () => {
+  global.localStorage = {'adal.error': ''};
+
+  const TOKEN_RESPONSES = {};
+  TOKEN_RESPONSES[RESOURCE] = {error: 'access_denied'};
+
+  const config = {useDummyAuthenticationContext: true,
+                  clientId: LOGIN_RESOURCE,
+                  tokenResponses: TOKEN_RESPONSES};
+
+  const client = AdalAuthClient.build(config);
+
+  expect.assertions(4);
+
+  const response = await client.getAccessToken(RESOURCE);
+
+  expect(response.ok).toEqual(false);
+  expect(response.loginTriggered).toEqual(false);
+  expect(response.accessDenied).toEqual(true);
+  expect(response.reason).toEqual('access_denied');
+});
+
 test('invalid access token', async () => {
   global.localStorage = {'adal.error': ''};
 

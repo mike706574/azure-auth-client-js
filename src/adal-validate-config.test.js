@@ -13,7 +13,7 @@ test('should not require domain', async () => {
        "clientType": "ADAL",
        "expireOffsetSeconds": 30,
        "extraQueryParameter": "nux=1",
-       "redirectUri": "null",
+       "redirectUri": "http://localhost",
        "tenant": "c834c34e-bbd3-4ea1-c2c2-51daeff91aa32",
        "tenantId": "c834c34e-bbd3-4ea1-c2c2-51daeff91aa32"
      });

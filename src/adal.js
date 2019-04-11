@@ -62,6 +62,12 @@ function getToken(authContext, resource) {
                      accessDenied: false,
                      resource});
           }
+          else if(error === 'access_denied') {
+            resolve({ok: false,
+                     loginTriggered: false,
+                     accessDenied: true,
+                     reason: error});
+          }
           else {
             authContext.login();
             resolve({ok: false,
