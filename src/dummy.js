@@ -1,5 +1,5 @@
 import arity from './arity';
-import {decode} from './common';
+import {decode, addIdentity} from './common';
 
 function sleep(duration) {
   return new Promise(resolve => setTimeout(resolve, duration));
@@ -60,9 +60,11 @@ export default class DummyAuthClient {
    */
   async getAccessToken(resource) {
     arity(arguments, 1);
-    const responses = this.config.accessTokenResponses;
-    if(responses) {
-      const response = responses[resource];
+    const {accessTokenResponses, accessTokens} = this.config;
+
+    if(accessTokenResponses) {
+      const response = accessTokenResponses[resource];
+
       if(response) {
         return respond(response);
       }
@@ -70,7 +72,17 @@ export default class DummyAuthClient {
       throw new Error(`No dummy access token response provided for resource ${resource}.`);
     }
 
-    throw new Error('No dummy access token responses provided.');
+    if(accessTokens) {
+      const accessToken = accessTokens[resource];
+
+      if(accessToken) {
+        return decode(accessToken);
+      }
+
+      throw new Error(`No dummy access token provided for resource ${resource}.`);
+    }
+
+    throw new Error('No dummy access tokens provided.');
   }
 
   /**
@@ -79,10 +91,18 @@ export default class DummyAuthClient {
   async getIdentityToken() {
     arity(arguments, 0);
     await sleepWhen(this.config.identityDelay);
-    const identity = this.config.identity;
+
+    const {identity, identityToken} = this.config;
+
     if(identity) {
       return {ok: true, ...identity};
     }
+
+    if(identityToken) {
+      const response = decode(identityToken);
+      return addIdentity(response);
+    }
+
     return {ok: false, reason: 'no-dummy-identity'};
   }
 }

@@ -64,18 +64,18 @@ Setting the **clientType** to 'ADAL' means you'll use the real implementation th
 
 You can also pass `tenantName` rather than `tenantId` if you feel like it, as well as override the default values of adal.js configuration properties that I chose.
 
-If you don't feel like talking to Azure AD and want to pretend to be an arbitrary user for testing, here's what your `Azure auth config` would look like:
+If you don't feel like talking to Azure AD and want to pretend to be an arbitrary user for testing, use the dummy implementation by setting **clientType** to 'DUMMY'.
+
+When using the dummy implementation, the **identityToken**, **identity**, **accessTokens**, and **accessTokenResponses** configuration properties can be used to configure the tokens returned by the dummy client.
+
+Here's an example of what a dummy `Azure auth config` might look like:
 
 ```js
 {clientType: "DUMMY",
- identity: {name: "JONES, FRED",
-            givenName: "FRED",
-            familyName: "JONES",
-            roles: ["Ninja", "Lawyer"]},
- identityDelay: 0}
+ identityToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpPTkVTLCBGUkVEIiwiZmFtaWx5X25hbWUiOiJKT05FUyIsImdpdmVuX25hbWUiOiJGUkVEIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNTE2MjM5MDIyfQ.IfakCBAhIYgkUU12-bRK4r6Boo2FVuW1kd9POylK"}
 ```
 
-Similarly, setting **clientType** to 'DUMMY' means you'll use the dummy implementation. Other properties that I'm too lazy to document right now control what will be returned when the application requests identity and access tokens and how long those requests will take.
+See the [Dummy configuration section]([Dummy Configuration]) section for a full overview of the different ways to configure the dummy client.
 
 It's possible you already have some kind of configuration object to hold your app's configuration - something that looks like this:
 
@@ -249,6 +249,62 @@ headers.append("Authorization", `Bearer ${tokenResponse.token}`);
 const options = {method: 'GET', headers, mode: "cors"};
 
 const barResponse = await fetch("https://foo.com/bar", options);
+```
+
+### Dummy Configuration
+
+The dummy client can be configured to return hardcoded identity and access tokens. Additionally, access token responses can be used to trigger various token-related error conditions.
+
+#### Identity Token
+
+To use a hardcoded identity token, set **identityToken** to a valid token with the **name**, **family_name**, **given_name**, and **roles** claims:
+
+```js
+{clientType: "DUMMY",
+ identityToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpPTkVTLCBGUkVEIiwiZmFtaWx5X25hbWUiOiJKT05FUyIsImdpdmVuX25hbWUiOiJGUkVEIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNTE2MjM5MDIyfQ.IfakCBAhIYgkUU12-bRK4r6Boo2FVuW1kd9POylK"}
+```
+
+```json
+{
+  "sub": "1234567890",
+  "name": "JONES, FRED",
+  "family_name": "JONES",
+  "given_name": "FRED",
+  "roles": ["ADMIN"],
+  "iat": 1516239022
+}
+```
+
+#### Access Tokens
+
+To return hardcoded access tokens, set **accessTokens** to an object containing valid tokens for each resource:
+
+```js
+{clientType: "DUMMY",
+ identityToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpPTkVTLCBGUkVEIiwiZmFtaWx5X25hbWUiOiJKT05FUyIsImdpdmVuX25hbWUiOiJGUkVEIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNTE2MjM5MDIyfQ.IfakCBAhIYgkUU12-bRK4r6Boo2FVuW1kd9POylK",
+ accessTokens: {"ae33c32e-d2f2-4992-a4b2-51d03e7c8677": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1MDkyMzM0NzUsImV4cCI6MTU0MDc2OTQ3NSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSJ9.SdoZIKv0cNZs6SS6EGTWVBRaeGm31rNztIC8jaLjg7o"}}
+```
+
+#### Identity (No Token)
+
+To use a dummy identity with no actual token, set **identity** to an object containing the **name**, **givenName**, **familyName**, and **roles** properties:
+
+```js
+{clientType: "DUMMY",
+ identity: {name: "JONES, FRED",
+            givenName: "FRED",
+            familyName: "JONES",
+            roles: ["Ninja", "Lawyer"]}}
+```
+
+#### Access Token Responses
+
+To trigger various error conditions when retrieving access tokens, set **accessTokenResponses** to an object containing error responses for each resource:
+
+```js
+{clientType: "DUMMY",
+ identityToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpPTkVTLCBGUkVEIiwiZmFtaWx5X25hbWUiOiJKT05FUyIsImdpdmVuX25hbWUiOiJGUkVEIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNTE2MjM5MDIyfQ.IfakCBAhIYgkUU12-bRK4r6Boo2FVuW1kd9POylK",
+ accessTokenResponses: {"ae33c32e-d2f2-4992-a4b2-51d03e7c8677": {"error": "dummy-error"}}}
 ```
 
 ## Build

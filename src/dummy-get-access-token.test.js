@@ -8,9 +8,8 @@ const VALID_TOKEN_DECODED = {"aud": "www.example.com", "exp": 1540769475, "iat":
 
 const RESOURCE = 'foo';
 
-test('fetches valid access token', async () => {
-  const TOKEN_RESPONSES = {};
-  TOKEN_RESPONSES[RESOURCE] = {token: VALID_TOKEN};
+test('fetches valid access token from dummy response', async () => {
+  const TOKEN_RESPONSES = {[RESOURCE]: {token: VALID_TOKEN}};
 
   const config = {accessTokenResponses: TOKEN_RESPONSES};
 
@@ -25,9 +24,24 @@ test('fetches valid access token', async () => {
   expect(response.decodedToken).toEqual(VALID_TOKEN_DECODED);
 });
 
+test('fetches valid access token from dummy access token', async () => {
+  const TOKENS = {[RESOURCE]: VALID_TOKEN};
+
+  const config = {accessTokens: TOKENS};
+
+  const client = DummyAuthClient.build(config);
+
+  expect.assertions(3);
+
+  const response = await client.getAccessToken(RESOURCE);
+
+  expect(response.ok).toEqual(true);
+  expect(response.token).toEqual(VALID_TOKEN);
+  expect(response.decodedToken).toEqual(VALID_TOKEN_DECODED);
+});
+
 test('error when fetching access token', async () => {
-  const TOKEN_RESPONSES = {};
-  TOKEN_RESPONSES[RESOURCE] = {error: 'dummy-error'};
+  const TOKEN_RESPONSES = {[RESOURCE]: {error: 'dummy-error'}};
 
   const config = {accessTokenResponses: TOKEN_RESPONSES};
 
@@ -44,8 +58,7 @@ test('error when fetching access token', async () => {
 });
 
 test('invalid access token', async () => {
-  const TOKEN_RESPONSES = {};
-  TOKEN_RESPONSES[RESOURCE] = {token: INVALID_TOKEN};
+  const TOKEN_RESPONSES = {[RESOURCE]: {token: INVALID_TOKEN}};
 
   const config = {accessTokenResponses: TOKEN_RESPONSES};
 

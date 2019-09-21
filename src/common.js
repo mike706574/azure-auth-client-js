@@ -25,11 +25,11 @@ export function decode(token) {
 /**
  * Adds identity information to a valid response.
  * @example
- * const identity = adddIdentity({"ok": true,
- *                                "token": "ABC123",
- *                                "decodedToken": {"name": "JONES, FRED",
- *                                                 "given_name": "FRED",
- *                                                 ...}});
+ * const identity = addIdentity({"ok": true,
+ *                               "token": "ABC123",
+ *                               "decodedToken": {"name": "JONES, FRED",
+ *                                                "given_name": "FRED",
+ *                                                ...}});
  *   => {...response, name: "JONES, FRED", givenName: "FRED", ...};
  * @returns {Object} The response with the added identity information.
  */
