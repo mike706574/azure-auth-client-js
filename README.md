@@ -307,15 +307,11 @@ To trigger various error conditions when retrieving access tokens, set **accessT
  accessTokenResponses: {"ae33c32e-d2f2-4992-a4b2-51d03e7c8677": {"error": "dummy-error"}}}
 ```
 
-## Build
-
-[![CircleCI](https://circleci.com/gh/mike706574/azure-auth-client-js.svg?style=svg)](https://circleci.com/gh/mike706574/azure-auth-client-js)
-
 ## Copyright and License
 
 The MIT License (MIT)
 
-Copyright (c) 2018 Michael Easter
+Copyright (c) 2019 Michael Easter
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
