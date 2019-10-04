@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------
-// AdalJS v1.0.15
+// AdalJS v1.0.18
 // @preserve Copyright (c) Microsoft Open Technologies, Inc.
 // All Rights Reserved
 // Apache License 2.0
@@ -135,6 +135,10 @@ var AuthenticationContext = (function () {
         this._openedWindows = [];
         this._requestType = this.REQUEST_TYPE.LOGIN;
         window._adalInstance = this;
+        this._storageSupport = {
+            localStorage: null,
+            sessionStorage: null
+        };
 
         // validate before constructor assignments
         if (config.displayCall && typeof config.displayCall !== 'function') {
@@ -191,6 +195,7 @@ var AuthenticationContext = (function () {
 
     if (typeof window !== 'undefined') {
         window.Logging = {
+            piiLoggingEnabled: false,
             level: 0,
             log: function (message) { }
         };
@@ -446,7 +451,7 @@ var AuthenticationContext = (function () {
     };
 
     /**
-     * Adds the passed callback to the array of callbacks for the specified resource and puts the array on the window object. 
+     * Adds the passed callback to the array of callbacks for the specified resource and puts the array on the window object.
      * @param {string}   resource A URI that identifies the resource for which the token is requested.
      * @param {string}   expectedState A unique identifier (guid).
      * @param {tokenCallback} callback - The callback provided by the caller. It will be called with token or error.
@@ -489,7 +494,7 @@ var AuthenticationContext = (function () {
      * @ignore
      */
     AuthenticationContext.prototype._renewToken = function (resource, callback, responseType) {
-        // use iframe to try refresh token
+        // use iframe to try to renew token
         // use given resource to create new authz url
         this.info('renewToken is called for resource:' + resource);
         var frameHandle = this._addAdalFrame('adalRenewFrame' + resource);
@@ -511,7 +516,7 @@ var AuthenticationContext = (function () {
         urlNavigate = urlNavigate + '&prompt=none';
         urlNavigate = this._addHintParameters(urlNavigate);
         this.registerCallback(expectedState, resource, callback);
-        this.verbose('Navigate to:' + urlNavigate);
+        this.verbosePii('Navigate to:' + urlNavigate);
         frameHandle.src = 'about:blank';
         this._loadFrameTimeout(urlNavigate, 'adalRenewFrame' + resource, resource);
 
@@ -522,7 +527,7 @@ var AuthenticationContext = (function () {
      * @ignore
      */
     AuthenticationContext.prototype._renewIdToken = function (callback, responseType) {
-        // use iframe to try refresh token
+        // use iframe to try to renew token
         this.info('renewIdToken is called');
         var frameHandle = this._addAdalFrame('adalIdTokenFrame');
         var expectedState = this._guid() + '|' + this.config.clientId;
@@ -540,7 +545,7 @@ var AuthenticationContext = (function () {
         urlNavigate = this._addHintParameters(urlNavigate);
         urlNavigate += '&nonce=' + encodeURIComponent(this._idTokenNonce);
         this.registerCallback(expectedState, this.config.clientId, callback);
-        this.verbose('Navigate to:' + urlNavigate);
+        this.verbosePii('Navigate to:' + urlNavigate);
         frameHandle.src = 'about:blank';
         this._loadFrameTimeout(urlNavigate, 'adalIdTokenFrame', this.config.clientId);
     };
@@ -648,62 +653,16 @@ var AuthenticationContext = (function () {
             return;
         }
 
-        if (!this._user) {
-            this.warn('User login is required');
-            callback('User login is required', null, 'login required');
-            return;
-        }
-
-        // refresh attept with iframe
-        //Already renewing for this resource, callback when we get the token.
-        if (this._activeRenewals[resource]) {
-            //Active renewals contains the state for each renewal.
-            this.registerCallback(this._activeRenewals[resource], resource, callback);
-        }
-        else {
-            this._requestType = this.REQUEST_TYPE.RENEW_TOKEN;
-            if (resource === this.config.clientId) {
-                // App uses idtoken to send to api endpoints
-                // Default resource is tracked as clientid to store this token
-                this.verbose('renewing idtoken');
-                this._renewIdToken(callback);
-            } else {
-                this._renewToken(resource, callback);
-            }
-        }
-    };
-
-    /**
-    * Checks if a signed in user exists or login_hint is passed in extraQueryParameter.
-    * Acquires token from the cache if it is not expired. Otherwise sends request to AAD to obtain a new token.
-    * @param {string}   resource  ResourceUri identifying the target resource
-    * @param {tokenCallback} callback -  The callback provided by the caller. It will be called with token or error.
-    */
-    AuthenticationContext.prototype.acquireTokenUnsignedUser = function (resource, callback) {
-        if (this._isEmpty(resource)) {
-            this.warn('resource is required');
-            callback('resource is required', null, 'resource is required');
-            return;
-        }
-
-        var token = this.getCachedToken(resource);
-
-        if (token) {
-            this.info('Token is already in cache for resource:' + resource);
-            callback(null, token, null);
-            return;
-        }
-
         if (!this._user && !(this.config.extraQueryParameter && this.config.extraQueryParameter.indexOf('login_hint') !== -1)) {
             this.warn('User login is required');
             callback('User login is required', null, 'login required');
             return;
         }
 
-        // refresh attept with iframe
-        //Already renewing for this resource, callback when we get the token.
+        // renew attempt with iframe
+        // Already renewing for this resource, callback when we get the token.
         if (this._activeRenewals[resource]) {
-            //Active renewals contains the state for each renewal.
+            // Active renewals contains the state for each renewal.
             this.registerCallback(this._activeRenewals[resource], resource, callback);
         }
         else {
@@ -711,13 +670,27 @@ var AuthenticationContext = (function () {
             if (resource === this.config.clientId) {
                 // App uses idtoken to send to api endpoints
                 // Default resource is tracked as clientid to store this token
-                this.verbose('renewing idtoken');
-                this._renewIdToken(callback, 'id_token token');
+                if (this._user) {
+                    this.verbose('renewing idtoken');
+                    this._renewIdToken(callback);
+                }
+                else {
+                    this.verbose('renewing idtoken and access_token');
+                    this._renewIdToken(callback, this.RESPONSE_TYPE.ID_TOKEN_TOKEN);
+                }
             } else {
-                this._renewToken(resource, callback, 'id_token token');
+                if (this._user) {
+                    this.verbose('renewing access_token');
+                    this._renewToken(resource, callback);
+                }
+                else {
+                    this.verbose('renewing idtoken and access_token');
+                    this._renewToken(resource, callback, this.RESPONSE_TYPE.ID_TOKEN_TOKEN);
+                }
             }
         }
     };
+
     /**
   * Acquires token (interactive flow using a popUp window) by sending request to AAD to obtain a new token.
   * @param {string}   resource  ResourceUri identifying the target resource
@@ -753,7 +726,7 @@ var AuthenticationContext = (function () {
         urlNavigate = urlNavigate + '&prompt=select_account';
 
         if (extraQueryParameters) {
-            urlNavigate += encodeURIComponent(extraQueryParameters);
+            urlNavigate += extraQueryParameters;
         }
 
         if (claims && (urlNavigate.indexOf("&claims") === -1)) {
@@ -806,7 +779,7 @@ var AuthenticationContext = (function () {
         var urlNavigate = this._urlRemoveQueryStringParameter(this._getNavigateUrl('token', resource), 'prompt');
         urlNavigate = urlNavigate + '&prompt=select_account';
         if (extraQueryParameters) {
-            urlNavigate += encodeURIComponent(extraQueryParameters);
+            urlNavigate += extraQueryParameters;
         }
 
         if (claims && (urlNavigate.indexOf("&claims") === -1)) {
@@ -829,7 +802,7 @@ var AuthenticationContext = (function () {
      */
     AuthenticationContext.prototype.promptUser = function (urlNavigate) {
         if (urlNavigate) {
-            this.info('Navigate to:' + urlNavigate);
+            this.infoPii('Navigate to:' + urlNavigate);
             window.location.replace(urlNavigate);
         } else {
             this.info('Navigate url is empty');
@@ -840,6 +813,7 @@ var AuthenticationContext = (function () {
      * Clears cache items.
      */
     AuthenticationContext.prototype.clearCache = function () {
+        this._user = null;
         this._saveItem(this.CONSTANTS.STORAGE.LOGIN_REQUEST, '');
         this._saveItem(this.CONSTANTS.STORAGE.ANGULAR_LOGIN_REQUEST, '');
         this._saveItem(this.CONSTANTS.STORAGE.SESSION_STATE, '');
@@ -886,7 +860,6 @@ var AuthenticationContext = (function () {
      */
     AuthenticationContext.prototype.logOut = function () {
         this.clearCache();
-        this._user = null;
         var urlNavigate;
 
         if (this.config.logOutUri) {
@@ -906,7 +879,7 @@ var AuthenticationContext = (function () {
             urlNavigate = this.instance + tenant + '/oauth2/logout?' + logout;
         }
 
-        this.info('Logout navigate to: ' + urlNavigate);
+        this.infoPii('Logout navigate to: ' + urlNavigate);
         this.promptUser(urlNavigate);
     };
 
@@ -955,21 +928,33 @@ var AuthenticationContext = (function () {
      * @ignore
      */
     AuthenticationContext.prototype._addHintParameters = function (urlNavigate) {
-        // include hint params only if upn is present
-        if (this._user && this._user.profile && this._user.profile.hasOwnProperty('upn')) {
 
-            // don't add login_hint twice if user provided it in the extraQueryParameter value
-            if (!this._urlContainsQueryStringParameter("login_hint", urlNavigate)) {
-                // add login_hint
-                urlNavigate += '&login_hint=' + encodeURIComponent(this._user.profile.upn);
+        //If you don't use prompt=none, then if the session does not exist, there will be a failure.
+        //If sid is sent alongside domain or login hints, there will be a failure since request is ambiguous.
+        //If sid is sent with a prompt value other than none or attempt_none, there will be a failure since the request is ambiguous.
+
+        if (this._user && this._user.profile) {
+            if (this._user.profile.sid && urlNavigate.indexOf('&prompt=none') !== -1) {
+                // don't add sid twice if user provided it in the extraQueryParameter value
+                if (!this._urlContainsQueryStringParameter("sid", urlNavigate)) {
+                    // add sid
+                    urlNavigate += '&sid=' + encodeURIComponent(this._user.profile.sid);
+                }
+            }
+            else if (this._user.profile.upn) {
+                // don't add login_hint twice if user provided it in the extraQueryParameter value
+                if (!this._urlContainsQueryStringParameter("login_hint", urlNavigate)) {
+                    // add login_hint
+                    urlNavigate += '&login_hint=' + encodeURIComponent(this._user.profile.upn);
+                }
+                // don't add domain_hint twice if user provided it in the extraQueryParameter value
+                if (!this._urlContainsQueryStringParameter("domain_hint", urlNavigate) && this._user.profile.upn.indexOf('@') > -1) {
+                    var parts = this._user.profile.upn.split('@');
+                    // local part can include @ in quotes. Sending last part handles that.
+                    urlNavigate += '&domain_hint=' + encodeURIComponent(parts[parts.length - 1]);
+                }
             }
 
-            // don't add domain_hint twice if user provided it in the extraQueryParameter value
-            if (!this._urlContainsQueryStringParameter("domain_hint", urlNavigate) && this._user.profile.upn.indexOf('@') > -1) {
-                var parts = this._user.profile.upn.split('@');
-                // local part can include @ in quotes. Sending last part handles that.
-                urlNavigate += '&domain_hint=' + encodeURIComponent(parts[parts.length - 1]);
-            }
         }
 
         return urlNavigate;
@@ -1190,7 +1175,7 @@ var AuthenticationContext = (function () {
 
         // Record error
         if (requestInfo.parameters.hasOwnProperty(this.CONSTANTS.ERROR_DESCRIPTION)) {
-            this.info('Error :' + requestInfo.parameters.error + '; Error description:' + requestInfo.parameters[this.CONSTANTS.ERROR_DESCRIPTION]);
+            this.infoPii('Error :' + requestInfo.parameters.error + '; Error description:' + requestInfo.parameters[this.CONSTANTS.ERROR_DESCRIPTION]);
             this._saveItem(this.CONSTANTS.STORAGE.ERROR, requestInfo.parameters.error);
             this._saveItem(this.CONSTANTS.STORAGE.ERROR_DESCRIPTION, requestInfo.parameters[this.CONSTANTS.ERROR_DESCRIPTION]);
 
@@ -1229,21 +1214,20 @@ var AuthenticationContext = (function () {
                     if (this._user && this._user.profile) {
                         if (!this._matchNonce(this._user)) {
                             this._saveItem(this.CONSTANTS.STORAGE.LOGIN_ERROR, 'Nonce received: ' + this._user.profile.nonce + ' is not same as requested: ' +
-                               this._getItem(this.CONSTANTS.STORAGE.NONCE_IDTOKEN));
+                                this._getItem(this.CONSTANTS.STORAGE.NONCE_IDTOKEN));
                             this._user = null;
                         } else {
                             this._saveItem(this.CONSTANTS.STORAGE.IDTOKEN, requestInfo.parameters[this.CONSTANTS.ID_TOKEN]);
-
                             // Save idtoken as access token for app itself
-                            resource = this.config.loginResource ? this.config.loginResource : this.config.clientId;
+                            var idTokenResource = this.config.loginResource ? this.config.loginResource : this.config.clientId;
 
-                            if (!this._hasResource(resource)) {
+                            if (!this._hasResource(idTokenResource)) {
                                 keys = this._getItem(this.CONSTANTS.STORAGE.TOKEN_KEYS) || '';
-                                this._saveItem(this.CONSTANTS.STORAGE.TOKEN_KEYS, keys + resource + this.CONSTANTS.RESOURCE_DELIMETER);
+                                this._saveItem(this.CONSTANTS.STORAGE.TOKEN_KEYS, keys + idTokenResource + this.CONSTANTS.RESOURCE_DELIMETER);
                             }
 
-                            this._saveItem(this.CONSTANTS.STORAGE.ACCESS_TOKEN_KEY + resource, requestInfo.parameters[this.CONSTANTS.ID_TOKEN]);
-                            this._saveItem(this.CONSTANTS.STORAGE.EXPIRATION_KEY + resource, this._user.profile.exp);
+                            this._saveItem(this.CONSTANTS.STORAGE.ACCESS_TOKEN_KEY + idTokenResource, requestInfo.parameters[this.CONSTANTS.ID_TOKEN]);
+                            this._saveItem(this.CONSTANTS.STORAGE.EXPIRATION_KEY + idTokenResource, this._user.profile.exp);
                         }
                     }
                     else {
@@ -1299,7 +1283,7 @@ var AuthenticationContext = (function () {
         }
         else {
             // in angular level, the url for $http interceptor call could be relative url,
-            // if it's relative call, we'll treat it as app backend call.            
+            // if it's relative call, we'll treat it as app backend call.
             return this.config.loginResource;
         }
 
@@ -1342,8 +1326,8 @@ var AuthenticationContext = (function () {
                 self = window.parent._adalInstance;
             }
 
-            const requestInfo = self.getRequestInfo(hash);
-            var token, tokenReceivedCallback, tokenType = null, silentLogin = false;
+            var requestInfo = self.getRequestInfo(hash);
+            var token, tokenReceivedCallback, tokenType = null;
 
             if (isPopup || window.parent !== window) {
                 tokenReceivedCallback = self._callBackMappedToRenewStates[requestInfo.stateResponse];
@@ -1367,10 +1351,6 @@ var AuthenticationContext = (function () {
             } else if (requestInfo.requestType === this.REQUEST_TYPE.LOGIN) {
                 token = requestInfo.parameters[self.CONSTANTS.ID_TOKEN];
                 tokenType = self.CONSTANTS.ID_TOKEN;
-
-                if (window.parent !== window) {
-                    silentLogin = true;
-                }
             }
 
             var errorDesc = requestInfo.parameters[self.CONSTANTS.ERROR_DESCRIPTION];
@@ -1379,21 +1359,15 @@ var AuthenticationContext = (function () {
                 if (tokenReceivedCallback) {
                     tokenReceivedCallback(errorDesc, token, error, tokenType);
                 }
-                if (silentLogin && token) {
-                    if (self.callback) {
-                        self.callback(errorDesc, token, error, tokenType);
-                    }
-                }
 
             } catch (err) {
                 self.error("Error occurred in user defined callback function: " + err);
             }
 
             if (window.parent === window && !isPopup) {
-                window.location.hash = '';
                 if (self.config.navigateToLoginRequestUrl) {
                     window.location.href = self._getItem(self.CONSTANTS.STORAGE.LOGIN_REQUEST);
-                }
+                } else window.location.hash = '';
             }
         }
     };
@@ -1459,7 +1433,7 @@ var AuthenticationContext = (function () {
         }
     };
 
-    //Take https://cdnjs.cloudflare.com/ajax/libs/Base64/0.3.0/base64.js and https://en.wikipedia.org/wiki/Base64 as reference. 
+    //Take https://cdnjs.cloudflare.com/ajax/libs/Base64/0.3.0/base64.js and https://en.wikipedia.org/wiki/Base64 as reference.
     AuthenticationContext.prototype._decode = function (base64IdToken) {
         var codes = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
         base64IdToken = String(base64IdToken).replace(/=+$/, '');
@@ -1488,7 +1462,7 @@ var AuthenticationContext = (function () {
                 decoded += String.fromCharCode(c1, c2);
                 break;
             }
-                // if last one is '='
+            // if last one is '='
             else if (i + 1 === length - 1) {
                 bits = h1 << 18 | h2 << 12
                 c1 = bits >> 16 & 255;
@@ -1715,7 +1689,7 @@ var AuthenticationContext = (function () {
                 ifr.setAttribute('aria-hidden', 'true');
                 ifr.style.visibility = 'hidden';
                 ifr.style.position = 'absolute';
-                ifr.style.width = ifr.style.height = ifr.borderWidth = '0px';
+                ifr.style.width = ifr.style.height = ifr.style.borderWidth = '0px';
 
                 adalFrame = document.getElementsByTagName('body')[0].appendChild(ifr);
             }
@@ -1790,20 +1764,44 @@ var AuthenticationContext = (function () {
     };
 
     /**
+     * Returns true if the browser supports given storage type
+     * @ignore
+     */
+    AuthenticationContext.prototype._supportsStorage = function(storageType) {
+        if (!(storageType in this._storageSupport)) {
+            return false;
+        }
+
+        if (this._storageSupport[storageType] !== null) {
+            return this._storageSupport[storageType];
+        }
+
+        try {
+            if (!(storageType in window) || window[storageType] === null) {
+                throw new Error();
+            }
+            var testKey = '__storageTest__';
+            window[storageType].setItem(testKey, 'A');
+            if (window[storageType].getItem(testKey) !== 'A') {
+                throw new Error();
+            }
+            window[storageType].removeItem(testKey);
+            if (window[storageType].getItem(testKey)) {
+                throw new Error();
+            }
+            this._storageSupport[storageType] = true;
+        } catch (e) {
+            this._storageSupport[storageType] = false;
+        }
+        return this._storageSupport[storageType];
+    }
+
+    /**
      * Returns true if browser supports localStorage, false otherwise.
      * @ignore
      */
     AuthenticationContext.prototype._supportsLocalStorage = function () {
-        try {
-            if (!window.localStorage) return false; // Test availability
-            window.localStorage.setItem('storageTest', 'A'); // Try write
-            if (window.localStorage.getItem('storageTest') != 'A') return false; // Test read/write
-            window.localStorage.removeItem('storageTest'); // Try delete
-            if (window.localStorage.getItem('storageTest')) return false; // Test delete
-            return true; // Success
-        } catch (e) {
-            return false;
-        }
+        return this._supportsStorage('localStorage');
     };
 
     /**
@@ -1811,16 +1809,7 @@ var AuthenticationContext = (function () {
      * @ignore
      */
     AuthenticationContext.prototype._supportsSessionStorage = function () {
-        try {
-            if (!window.sessionStorage) return false; // Test availability
-            window.sessionStorage.setItem('storageTest', 'A'); // Try write
-            if (window.sessionStorage.getItem('storageTest') != 'A') return false; // Test read/write
-            window.sessionStorage.removeItem('storageTest'); // Try delete
-            if (window.sessionStorage.getItem('storageTest')) return false; // Test delete
-            return true; // Success
-        } catch (e) {
-            return false;
-        }
+        return this._supportsStorage('sessionStorage');
     };
 
     /**
@@ -1852,13 +1841,18 @@ var AuthenticationContext = (function () {
     };
 
     /**
-     * Checks the Logging Level, constructs the Log message and logs it. Users need to implement/override this method to turn on Logging. 
+     * Checks the Logging Level, constructs the Log message and logs it. Users need to implement/override this method to turn on Logging.
      * @param {number} level  -  Level can be set 0,1,2 and 3 which turns on 'error', 'warning', 'info' or 'verbose' level logging respectively.
      * @param {string} message  -  Message to log.
      * @param {string} error  -  Error to log.
      */
-    AuthenticationContext.prototype.log = function (level, message, error) {
+    AuthenticationContext.prototype.log = function (level, message, error, containsPii) {
+
         if (level <= Logging.level) {
+
+            if (!Logging.piiLoggingEnabled && containsPii)
+                return;
+
             var timestamp = new Date().toUTCString();
             var formattedMessage = '';
 
@@ -1909,11 +1903,43 @@ var AuthenticationContext = (function () {
     };
 
     /**
+    * Logs Pii messages when Logging Level is set to 0 and window.piiLoggingEnabled is set to true.
+    * @param {string} message  -  Message to log.
+    * @param {string} error  -  Error to log.
+    */
+    AuthenticationContext.prototype.errorPii = function (message, error) {
+        this.log(this.CONSTANTS.LOGGING_LEVEL.ERROR, message, error, true);
+    };
+
+    /**
+     * Logs  Pii messages when Logging Level is set to 1 and window.piiLoggingEnabled is set to true.
+     * @param {string} message  -  Message to log.
+     */
+    AuthenticationContext.prototype.warnPii = function (message) {
+        this.log(this.CONSTANTS.LOGGING_LEVEL.WARN, message, null, true);
+    };
+
+    /**
+     * Logs messages when Logging Level is set to 2 and window.piiLoggingEnabled is set to true.
+     * @param {string} message  -  Message to log.
+     */
+    AuthenticationContext.prototype.infoPii = function (message) {
+        this.log(this.CONSTANTS.LOGGING_LEVEL.INFO, message, null, true);
+    };
+
+    /**
+     * Logs messages when Logging Level is set to 3 and window.piiLoggingEnabled is set to true.
+     * @param {string} message  -  Message to log.
+     */
+    AuthenticationContext.prototype.verbosePii = function (message) {
+        this.log(this.CONSTANTS.LOGGING_LEVEL.VERBOSE, message, null, true);
+    };
+    /**
      * Returns the library version.
      * @ignore
      */
     AuthenticationContext.prototype._libVersion = function () {
-        return '1.0.15';
+        return '1.0.18';
     };
 
     /**
